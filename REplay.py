@@ -64,9 +64,3 @@ for i in playlistRaw["tracks"]["items"]:
 f.close()
 
 
-query = "Nocturne in C-Sharp Minor" 
-query = query.replace(" ", "")
-html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + query, )
-videoIDs = re.findall(r"watch\?v=(\S{11})", html.read().decode('utf-8'))
-print(videoIDs[0])
-print("https://www.youtube.com/watch?v=" + videoIDs[0])
