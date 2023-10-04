@@ -5,6 +5,8 @@ from requests import post, get
 import json
 import urllib.request
 import re
+import googleapiclient.discovery
+import pprint as pprint
 
 load_dotenv()
 
@@ -50,6 +52,25 @@ def getPlaylist(token, playListID):
   jsonResult = json.loads(result.content)
   return jsonResult
 
+def YoutubeSearch(query,maxResults):
+  api_service_name = "youtube"
+  api_version = "v3"
+  DEVELOPER_KEY = os.getenv("GOOGLE_API_KEY")
+
+  youtube = googleapiclient.discovery.build(
+    api_service_name, api_version, developerKey = DEVELOPER_KEY
+  )
+
+  request = youtube.search().list(
+    part='snippet',
+    q = query,
+    maxResults=maxResults,
+    order="viewCount",
+    type="video"
+  )
+
+  response = request.execute()
+  pprint.pprint(response)
 
 token = getToken()
 
@@ -63,4 +84,4 @@ for i in playlistRaw["tracks"]["items"]:
   f.write("\n")
 f.close()
 
-
+YoutubeSearch("Vielle prière bouddhique (Prière quotidienne pour tout l'Univers) For Tenor, Chorus And Orchestra",1)
