@@ -52,7 +52,14 @@ def getPlaylist(token, playListID):
   jsonResult = json.loads(result.content)
   return jsonResult
 
+def getPlayListID():
+  playList = input("please click share on you spotify playlist and paste the url here: ")
+  playListID = playList.split("/")[-1]
+  playListID = playListID.split("?")[0]
+  return playListID
+
 token = getToken()
+
 
 playlistRaw = getPlaylist(token,"57edcOl1dxSb7x3a0xuYe4")
 
