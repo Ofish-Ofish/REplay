@@ -5,8 +5,8 @@ from requests import post, get
 import json
 import urllib.request
 import re
-import googleapiclient.discovery
 import pprint as pprint
+from YoutubeApi import YoutubeSearch
 
 load_dotenv()
 
@@ -52,33 +52,10 @@ def getPlaylist(token, playListID):
   jsonResult = json.loads(result.content)
   return jsonResult
 
-def YoutubeSearch(query,maxResults):
-  api_service_name = "youtube"
-  api_version = "v3"
-  DEVELOPER_KEY = os.getenv("GOOGLE_API_KEY")
-
-  youtube = googleapiclient.discovery.build(
-    api_service_name, api_version, developerKey = DEVELOPER_KEY
-  )
-
-  request = youtube.search().list(
-    part='snippet',
-    q = query,
-    maxResults=maxResults,
-    order="viewCount",
-    type="video"
-  )
-
-  response = request.execute()
-  pprint.pprint(response)
-
-
-
-
-
 token = getToken()
 
 playlistRaw = getPlaylist(token,"57edcOl1dxSb7x3a0xuYe4")
+
 json.dump((playlistRaw), open('spotifyPlayList.json', 'w'), indent=2)
 
 f = open("songPlayList.txt", "w", encoding='utf-8')
