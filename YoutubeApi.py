@@ -2,7 +2,11 @@ from dotenv import load_dotenv
 import os
 import googleapiclient.discovery
 import pprint as pprint
+from functools import cache, lru_cache
 
+load_dotenv()
+
+@lru_cache(maxsize=5)
 def YoutubeSearch(query,maxResults):
   api_service_name = "youtube"
   api_version = "v3"
