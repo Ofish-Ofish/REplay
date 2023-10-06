@@ -58,7 +58,6 @@ def getPlaylist(token, playListID):
   json.dump((jsonResult), open('spotifyPlayList.json', 'w'), indent=2)
   return jsonResult
 
-@lru_cache(maxsize=5)
 def getPlayListID():
   playList = input("please click share on you spotify playlist and paste the url here: ")
   playListID = playList.split("/")[-1]
