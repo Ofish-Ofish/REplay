@@ -64,18 +64,16 @@ def getPlayListID():
   playListID = playListID.split("?")[0]
   return playListID
 
-token = getToken()
-
-playlistRaw = getPlaylist(token,"4L4pDGEnaSrkruABN5ef7q")
-
-f = open("songPlayList.txt", "w", encoding='utf-8')
-for i in playlistRaw["tracks"]["items"]:
-  songName = i["track"]["name"]
-  f.write(songName)
-  f.write("\n")
-f.close()
-
-YoutubeSearch("FUCKING YOUNG / PERFECT (feat. Charlie Wilson, Chaz Bundick, Sydney Bennett & Kali Uchis) ",1)
-
 if __name__ == '__main__':
-  pass
+  token = getToken()
+
+  playlistRaw = getPlaylist(token,"4L4pDGEnaSrkruABN5ef7q")
+
+  f = open("songPlayList.txt", "w", encoding='utf-8')
+  for i in playlistRaw["tracks"]["items"]:
+    songName = i["track"]["name"]
+    f.write(songName)
+    f.write("\n")
+  f.close()
+
+  YoutubeSearch("FUCKING YOUNG / PERFECT (feat. Charlie Wilson, Chaz Bundick, Sydney Bennett & Kali Uchis) ",1)
