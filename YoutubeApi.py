@@ -25,4 +25,4 @@ def YoutubeSearch(query,maxResults):
   )
 
   response = request.execute()
-  pprint.pprint(response)
+  return response
