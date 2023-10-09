@@ -9,7 +9,6 @@ import pprint as pprint
 from YoutubeApi import YoutubeSearch
 from functools import cache, lru_cache
 from multiprocessing import Process
-from pytube import YouTube 
 
 load_dotenv()
 
@@ -78,24 +77,3 @@ if __name__ == '__main__':
   f.close()
 
   youtubeSearch = YoutubeSearch("Piano Sonata No. 2 in B-Flat Minor, Op. 36: II. Non allegro. Lento",1)
-  json.dump((youtubeSearch["items"][0]["id"]["videoId"]), open('youtube.json', 'w'), indent=2)
-
-  yt = YouTube("https://www.youtube.com/watch?v="+youtubeSearch["items"][0]["id"]["videoId"]) 
-  
-  # extract only audio 
-  video = yt.streams.filter(only_audio=True).first() 
-    
-  # check for destination to save file 
-  print("Enter the destination (leave blank for current directory)") 
-  destination = str(input(">> ")) or '.'
-    
-  # download the file 
-  out_file = video.download(output_path=destination) 
-    
-  # save the file 
-  base, ext = os.path.splitext(out_file) 
-  new_file = base + '.mp3'
-  os.rename(out_file, new_file) 
-    
-  # result of success 
-  print(yt.title + " has been successfully downloaded.")

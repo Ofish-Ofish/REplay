@@ -3,6 +3,7 @@ import os
 import googleapiclient.discovery
 import pprint as pprint
 from functools import cache, lru_cache
+from pytube import YouTube 
 
 load_dotenv()
 
@@ -20,9 +21,19 @@ def YoutubeSearch(query,maxResults):
     part='snippet',
     q = query,
     maxResults=maxResults,
-    order="viewCount",
+    order="relevance",
     type="video"
   )
 
   response = request.execute()
-  return response
+  
+  # json.dump((response["items"][0]["id"]["videoId"]), open('youtube.json', 'w'), indent=2)
+
+  yt = YouTube("https://www.youtube.com/watch?v="+response["items"][0]["id"]["videoId"]) 
+  video = yt.streams.filter(only_audio=True).first() 
+  destination = '.'
+  out_file = video.download(output_path=destination) 
+  base, ext = os.path.splitext(out_file) 
+  new_file = base + '.mp3'
+  os.rename(out_file, new_file) 
+  print(yt.title + " has been successfully downloaded.")
