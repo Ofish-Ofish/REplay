@@ -6,7 +6,7 @@ import json
 import urllib.request
 import re
 import pprint as pprint
-from YoutubeApi import YoutubeSearch
+from YoutubeApi import YoutubeSearch, songSave, playListSongSave
 from functools import cache, lru_cache
 from multiprocessing import Process
 
@@ -55,7 +55,6 @@ def getPlaylist(token, playListID):
   headers = getAuthHeader(token)
   result = get(url, headers=headers)
   jsonResult = json.loads(result.content)
-  json.dump((jsonResult), open('spotifyPlayList.json', 'w'), indent=2)
   return jsonResult
 
 def getPlayListID():
@@ -64,16 +63,27 @@ def getPlayListID():
   playListID = playListID.split("?")[0]
   return playListID
 
-if __name__ == '__main__':
-  token = getToken()
 
-  playlistRaw = getPlaylist(token,"57edcOl1dxSb7x3a0xuYe4")
-
-  f = open("songPlayList.txt", "w", encoding='utf-8')
+def downloadPlayList(): 
+  os.system("clear")
+  download = input("do you want to download a playlist from spotify type y/n: ")
+  if download != "y" and download != "Y":
+    return 1.
+  playlist = input("please add the name of your playlist: ")
+  playlist = playlist.replace(" ", "_")
+  os.chdir("./playList/")
+  os.makedirs(playlist)
+  os.chdir(playlist)
+  playlistRaw = getPlaylist(token, getPlayListID())
   for i in playlistRaw["tracks"]["items"]:
     songName = i["track"]["name"]
-    f.write(songName)
-    f.write("\n")
-  f.close()
+    youtubeSearch = YoutubeSearch(songName,1)
+    songID = youtubeSearch["items"][0]["id"]["videoId"]
+    playListSongSave(songID, playlist)
 
-  youtubeSearch = YoutubeSearch("Piano Sonata No. 2 in B-Flat Minor, Op. 36: II. Non allegro. Lento",1)
+
+  
+
+if __name__ == '__main__':
+  token = getToken()
+  downloadPlayList()

@@ -25,6 +25,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 .env
+*.wav
+*.mp3
 MANIFEST
 
 # PyInstaller

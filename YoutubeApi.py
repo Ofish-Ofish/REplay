@@ -26,10 +26,24 @@ def YoutubeSearch(query,maxResults):
   )
 
   response = request.execute()
-  
+  return response
+
+@lru_cache(maxsize=5)
+def songSave(response):
   # json.dump((response["items"][0]["id"]["videoId"]), open('youtube.json', 'w'), indent=2)
 
-  yt = YouTube("https://www.youtube.com/watch?v="+response["items"][0]["id"]["videoId"]) 
+  yt = YouTube("https://www.youtube.com/watch?v="+response) 
+  video = yt.streams.filter(only_audio=True).first() 
+  destination = './song'
+  out_file = video.download(output_path=destination) 
+  base, ext = os.path.splitext(out_file) 
+  new_file = base + '.mp3'
+  os.rename(out_file, new_file) 
+  print(yt.title + " has been successfully downloaded.")
+
+@lru_cache(maxsize=5)
+def playListSongSave(response, playlist):
+  yt = YouTube("https://www.youtube.com/watch?v="+response) 
   video = yt.streams.filter(only_audio=True).first() 
   destination = '.'
   out_file = video.download(output_path=destination) 
@@ -37,3 +51,4 @@ def YoutubeSearch(query,maxResults):
   new_file = base + '.mp3'
   os.rename(out_file, new_file) 
   print(yt.title + " has been successfully downloaded.")
+
