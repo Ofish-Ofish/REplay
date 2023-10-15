@@ -71,6 +71,11 @@ def downloadPlayList():
     return 1.
   playlist = input("please add the name of your playlist: ")
   playlist = playlist.replace(" ", "_")
+  path = "./playList/"
+  isExsist = os.path.exists(path)
+  if not isExsist:
+    os.chdir(".")
+    os.makedirs("playList")
   os.chdir("./playList/")
   os.makedirs(playlist)
   os.chdir(playlist)
