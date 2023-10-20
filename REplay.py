@@ -55,6 +55,15 @@ def getPlaylist(token, playListID):
   headers = getAuthHeader(token)
   result = get(url, headers=headers)
   jsonResult = json.loads(result.content)
+  json.dump((jsonResult["tracks"]["items"][0]["track"]["id"]), open('spotigfy.json', 'w'), indent=2)
+  return jsonResult
+
+def getSongInfo(playlist, token, id): 
+  url = f"https://api.spotify.com/v1/audio-features/{id}"
+  headers = getAuthHeader(token)
+  result = get(url, headers=headers)
+  jsonResult = json.loads(result.content)
+  json.dump(jsonResult, open(f'songInfo{playlist}.json', 'a'), indent=2)
   return jsonResult
 
 def getPlayListID():
@@ -66,25 +75,28 @@ def getPlayListID():
 
 def downloadPlayList(): 
   os.system("clear")
-  download = input("do you want to download a playlist from spotify type y/n: ")
-  if download != "y" and download != "Y":
-    return 1.
+  # download = input("do you want to download a playlist from spotify type y/n: ")
+  # if download != "y" and download != "Y":
+  #   return 1.
   playlist = input("please add the name of your playlist: ")
-  playlist = playlist.replace(" ", "_")
-  path = "./playList/"
-  isExsist = os.path.exists(path)
-  if not isExsist:
-    os.chdir(".")
-    os.makedirs("playList")
-  os.chdir("./playList/")
-  os.makedirs(playlist)
-  os.chdir(playlist)
+  # playlist = playlist.replace(" ", "_")
+  # path = "./playList/"
+  # isExsist = os.path.exists(path)
+  # if not isExsist:
+  #   os.chdir(".")
+  #   os.makedirs("playList")
+  # os.chdir("./playList/")
+  # os.makedirs(playlist)
+  # os.chdir(playlist)
   playlistRaw = getPlaylist(token, getPlayListID())
+  f = open(f'songInfo{playlist}.json', 'w')
+  f.close()
   for i in playlistRaw["tracks"]["items"]:
     songName = i["track"]["name"]
-    youtubeSearch = YoutubeSearch(songName,1)
-    songID = youtubeSearch["items"][0]["id"]["videoId"]
-    playListSongSave(songID, playlist)
+    getSongInfo(playlist,token, i["track"]["id"])
+    # youtubeSearch = YoutubeSearch(songName,1)
+    # songID = youtubeSearch["items"][0]["id"]["videoId"]
+    # playListSongSave(songID, playlist)
 
 
   
