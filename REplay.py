@@ -9,6 +9,7 @@ import pprint as pprint
 from YoutubeApi import YoutubeSearch, songSave, playListSongSave
 from functools import cache, lru_cache
 from multiprocessing import Process
+import csv
 
 load_dotenv()
 
@@ -55,7 +56,7 @@ def getPlaylist(token, playListID):
   headers = getAuthHeader(token)
   result = get(url, headers=headers)
   jsonResult = json.loads(result.content)
-  json.dump((jsonResult["tracks"]["items"][0]["track"]["id"]), open('spotigfy.json', 'w'), indent=2)
+  # json.dump((jsonResult["tracks"]["items"][0]["track"]["id"]), open('spotigfy.json', 'w'), indent=2)
   return jsonResult
 
 def getSongInfo(playlist, token, id): 
@@ -63,7 +64,7 @@ def getSongInfo(playlist, token, id):
   headers = getAuthHeader(token)
   result = get(url, headers=headers)
   jsonResult = json.loads(result.content)
-  json.dump(jsonResult, open(f'songInfo{playlist}.json', 'a'), indent=2)
+  # json.dump(jsonResult, open(f'songInfo{playlist}.json', 'a'), indent=2)
   return jsonResult
 
 def getPlayListID():
@@ -85,19 +86,28 @@ def downloadPlayList():
   # if not isExsist:
   #   os.chdir(".")
   #   os.makedirs("playList")
-  # os.chdir("./playList/")
+  os.chdir("./playList/")
   # os.makedirs(playlist)
   # os.chdir(playlist)
+  with open(f"{playlist}.csv",'w',newline='') as f:
+    writer = csv.writer(f)
+    writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
   playlistRaw = getPlaylist(token, getPlayListID())
-  f = open(f'songInfo{playlist}.json', 'w')
-  f.close()
   for i in playlistRaw["tracks"]["items"]:
     songName = i["track"]["name"]
-    getSongInfo(playlist,token, i["track"]["id"])
+    songid = i["track"]["id"]
+    Albumid = i["track"]["album"]["id"]
+    data = (getSongInfo(playlist,token, i["track"]["id"]))
+    data = list(data.values())
+    data = [Albumid] + data
+    data = [songid] + data
+    data = [songName] + data
+    with open(f"{playlist}.csv",'a',newline='') as f:
+      writer = csv.writer(f)
+      writer.writerow(data)
     # youtubeSearch = YoutubeSearch(songName,1)
     # songID = youtubeSearch["items"][0]["id"]["videoId"]
     # playListSongSave(songID, playlist)
-
 
   
 

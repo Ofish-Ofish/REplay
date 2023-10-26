@@ -27,6 +27,7 @@ share/python-wheels/
 .env
 *.wav
 *.mp3
+*.csv
 MANIFEST
 
 # PyInstaller
