@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+import numpy
 import base64
 from requests import post, get
 import json
@@ -75,6 +76,16 @@ def getPlayListID():
   playListID = playListID.split("?")[0]
   return playListID
 
+def similarity(playlist,s1,s2):
+  import csv
+  with open(f'{playlist}.csv', newline='') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter='~', quotechar='|')
+    for row in spamreader:
+      print(row[7], row[12], row[13])
+      print(len(row))
+  # numpy.cross()
+
+
 
 def downloadPlayList(): 
   os.system("clear")
@@ -92,11 +103,11 @@ def downloadPlayList():
   # os.makedirs(playlist)
   # os.chdir(playlist)  
   with open(f"{playlist}.csv",'w',newline='',encoding='utf-8') as f:
-    writer = csv.writer(f)
+    writer = csv.writer(f, delimiter='~')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
   playlistRaw = getPlaylist(token, getPlayListID())
   for i in playlistRaw["tracks"]["items"]:
-    songName = i["track"]["name"].replace("[", "").replace("]", "")
+    songName = i["track"]["name"].replace("[", "").replace("]", "").replace("~", "")
     songid = i["track"]["id"]
     Albumid = i["track"]["album"]["id"]
     data = (getSongInfo(playlist,token, i["track"]["id"]))
@@ -105,10 +116,13 @@ def downloadPlayList():
     data = [songid] + data
     data = [songName] + data
     with open(f"{playlist}.csv",'a',newline='', encoding='utf-8') as f:
-      writer = csv.writer(f)
+      writer = csv.writer(f, delimiter='~')
       writer.writerow(data)
-  df = pd.read_csv(f"{playlist}.csv") 
-  print(df)
+  # df = pd.read_csv(f"{playlist}.csv") 
+  # print(df)
+  similarity(playlist,2,1)
+  
+
     # youtubeSearch = YoutubeSearch(songName,1)
     # songID = youtubeSearch["items"][0]["id"]["videoId"]
     # playListSongSave(songID, playlist)
