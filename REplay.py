@@ -94,7 +94,7 @@ def downloadPlayList():
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
   playlistRaw = getPlaylist(token, getPlayListID())
   for i in playlistRaw["tracks"]["items"]:
-    songName = i["track"]["name"]
+    songName = i["track"]["name"].replace("[", "").replace("]", "")
     songid = i["track"]["id"]
     Albumid = i["track"]["album"]["id"]
     data = (getSongInfo(playlist,token, i["track"]["id"]))
