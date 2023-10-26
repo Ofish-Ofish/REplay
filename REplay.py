@@ -10,6 +10,8 @@ from YoutubeApi import YoutubeSearch, songSave, playListSongSave
 from functools import cache, lru_cache
 from multiprocessing import Process
 import csv
+import pandas as pd  
+
 
 load_dotenv()
 
@@ -88,8 +90,8 @@ def downloadPlayList():
   #   os.makedirs("playList")
   os.chdir("./playList/")
   # os.makedirs(playlist)
-  # os.chdir(playlist)
-  with open(f"{playlist}.csv",'w',newline='') as f:
+  # os.chdir(playlist)  
+  with open(f"{playlist}.csv",'w',newline='',encoding='utf-8') as f:
     writer = csv.writer(f)
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
   playlistRaw = getPlaylist(token, getPlayListID())
@@ -102,9 +104,11 @@ def downloadPlayList():
     data = [Albumid] + data
     data = [songid] + data
     data = [songName] + data
-    with open(f"{playlist}.csv",'a',newline='') as f:
+    with open(f"{playlist}.csv",'a',newline='', encoding='utf-8') as f:
       writer = csv.writer(f)
       writer.writerow(data)
+  df = pd.read_csv(f"{playlist}.csv") 
+  print(df)
     # youtubeSearch = YoutubeSearch(songName,1)
     # songID = youtubeSearch["items"][0]["id"]["videoId"]
     # playListSongSave(songID, playlist)
