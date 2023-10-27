@@ -77,58 +77,55 @@ def getPlayListID():
   return playListID
 
 def similarity(playlist,s1,s2):
-  import csv
+  os.chdir("./playList/")
+  playlistSongs = []
   with open(f'{playlist}.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter='~', quotechar='|')
     for row in spamreader:
-      print(row[7], row[12], row[13])
-      print(len(row))
+      playlistSongs.append([row[7], row[12], row[13]])
+    print(playlistSongs)
   # numpy.cross()
-
 
 
 def downloadPlayList(): 
   os.system("clear")
-  # download = input("do you want to download a playlist from spotify type y/n: ")
-  # if download != "y" and download != "Y":
-  #   return 1.
   playlist = input("please add the name of your playlist: ")
-  # playlist = playlist.replace(" ", "_")
-  # path = "./playList/"
-  # isExsist = os.path.exists(path)
-  # if not isExsist:
-  #   os.chdir(".")
-  #   os.makedirs("playList")
+  playlist = playlist.replace(" ", "_")
+  path = "./playList/"
+  isExsist = os.path.exists(path)
+  if not isExsist:
+    os.chdir(".")
+    os.makedirs("playList")
   os.chdir("./playList/")
-  # os.makedirs(playlist)
-  # os.chdir(playlist)  
+  os.makedirs(playlist)
+  os.chdir(playlist)
+  playlistRaw = getPlaylist(token, getPlayListID())
+  for i in playlistRaw["tracks"]["items"]:
+    songName = i["track"]["name"].replace("[", "").replace("]", "").replace("~", "")
+    youtubeSearch = YoutubeSearch(songName,1)
+    songID = youtubeSearch["items"][0]["id"]["videoId"]
+    playListSongSave(songID, playlist)
+
+
+def csvSave(playlist):
+  os.system("clear")
+  os.chdir("./playList/")
+  playlistRaw = getPlaylist(token, getPlayListID())
   with open(f"{playlist}.csv",'w',newline='',encoding='utf-8') as f:
     writer = csv.writer(f, delimiter='~')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
-  playlistRaw = getPlaylist(token, getPlayListID())
   for i in playlistRaw["tracks"]["items"]:
     songName = i["track"]["name"].replace("[", "").replace("]", "").replace("~", "")
     songid = i["track"]["id"]
     Albumid = i["track"]["album"]["id"]
     data = (getSongInfo(playlist,token, i["track"]["id"]))
     data = list(data.values())
-    data = [Albumid] + data
-    data = [songid] + data
-    data = [songName] + data
+    data = [songName] + [songid] + [Albumid] + data
     with open(f"{playlist}.csv",'a',newline='', encoding='utf-8') as f:
       writer = csv.writer(f, delimiter='~')
       writer.writerow(data)
-  # df = pd.read_csv(f"{playlist}.csv") 
-  # print(df)
-  similarity(playlist,2,1)
-  
-
-    # youtubeSearch = YoutubeSearch(songName,1)
-    # songID = youtubeSearch["items"][0]["id"]["videoId"]
-    # playListSongSave(songID, playlist)
-
-  
 
 if __name__ == '__main__':
   token = getToken()
-  downloadPlayList()
+  # csvSave("w")
+  similarity("w","w","w")
