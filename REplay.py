@@ -83,7 +83,7 @@ def similarity(playlist,s1,s2):
     spamreader = csv.reader(csvfile, delimiter='~', quotechar='|')
     for row in spamreader:
       playlistSongs.append([row[7], row[12], row[13]])
-    print(playlistSongs)
+    pprint.pprint(playlistSongs)
   # numpy.cross()
 
 
@@ -126,6 +126,8 @@ def csvSave(playlist):
       writer.writerow(data)
 
 if __name__ == '__main__':
+  os.system("clear")
+  os.chdir(".")
   token = getToken()
   # csvSave("w")
   similarity("w","w","w")
