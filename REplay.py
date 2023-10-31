@@ -4,14 +4,12 @@ import numpy
 import base64
 from requests import post, get
 import json
-import urllib.request
-import re
 import pprint as pprint
 from YoutubeApi import YoutubeSearch, songSave, playListSongSave
 from functools import cache, lru_cache
 from multiprocessing import Process
 import csv
-import pandas as pd  
+import random
 
 
 load_dotenv()
@@ -76,15 +74,25 @@ def getPlayListID():
   playListID = playListID.split("?")[0]
   return playListID
 
-def similarity(playlist,s1,s2):
+def vectorNormalizer(playlist):
   os.chdir("./playList/")
   playlistSongs = []
   with open(f'{playlist}.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter='~', quotechar='|')
     for row in spamreader:
-      playlistSongs.append([row[7], row[12], row[13]])
-    pprint.pprint(playlistSongs)
-  # numpy.cross()
+      if row[7].isalpha():
+        continue
+      v = numpy.vectorize(float)([row[7], row[12], row[13]])
+      normalized_v = v / numpy.sqrt(numpy.sum(v**2))
+      playlistSongs.append(normalized_v)
+    return playlistSongs
+
+def similarity(playlistSongs):
+  v = numpy.cross(playlistSongs[0], playlistSongs[1])
+  print(numpy.sqrt(numpy.sum(v**2)))
+  v = numpy.cross(playlistSongs[0], playlistSongs[2])
+  print(numpy.sqrt(numpy.sum(v**2)))
+
 
 
 def downloadPlayList(): 
@@ -130,4 +138,4 @@ if __name__ == '__main__':
   os.chdir(".")
   token = getToken()
   # csvSave("w")
-  similarity("w","w","w")
+  similarity(vectorNormalizer("w"))
