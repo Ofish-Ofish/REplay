@@ -13,7 +13,6 @@ import random
 
 PLAYLISTNAME = "play"
 
-
 load_dotenv()
 
 clientId = os.getenv("CLIENT_ID")
@@ -87,7 +86,7 @@ def similarity(cs,s):
   v = numpy.cross(cs, s)
   return numpy.sqrt(numpy.sum(v**2))
 
-def downloadPlayList(): 
+def downloadPlayList(token): 
   os.system("clear")
   playlist = input("please add the name of your playlist: ")
   playlist = playlist.replace(" ", "_")
@@ -106,7 +105,7 @@ def downloadPlayList():
     songID = youtubeSearch["items"][0]["id"]["videoId"]
     playListSongSave(songID, playlist)
 
-def formatData(item, playlist):
+def formatData(item, playlist, token):
   songName = item["track"]["name"].replace("[", "").replace("]", "").replace("~", "")
   songid = item["track"]["id"]
   Albumid = item["track"]["album"]["id"]
@@ -114,6 +113,7 @@ def formatData(item, playlist):
   data = list(data.values())
   data = [songName] + [songid] + [Albumid] + data
   data.append(vectorNormalizer([data[4], data[12], data[13]]))
+  return data
 
 def csvSave(playlist, token):
   os.system("clear")
@@ -123,7 +123,7 @@ def csvSave(playlist, token):
     writer = csv.writer(f, delimiter='~')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
     for i in playlistRaw["tracks"]["items"]:
-      data = formatData(i, playlist)
+      data = formatData(i, playlist, token)
 
       writer = csv.writer(f, delimiter='~')
       writer.writerow(data)
