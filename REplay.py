@@ -26,13 +26,13 @@ def getToken():
   authBase64 = str(base64.b64encode(authByte), "utf-8")
 
 
-  url = "https://accounts.spotify.com/api/token"
+  URL = "https://accounts.spotify.com/api/token"
   headers = {
     "Authorization": "Basic " + authBase64,
     "Content-Type": "application/x-www-form-urlencoded"
   }
   data = {"grant_type": "client_credentials"}
-  result = post(url, headers=headers, data=data)
+  result = post(URL, headers=headers, data=data)
   jsonResult = json.loads(result.content)
   token = jsonResult["access_token"]
   return token
@@ -44,28 +44,28 @@ def getAuthHeader(token):
 
 @lru_cache(maxsize=5)
 def searchForArtist(token, artistName):
-  url = "https://api.spotify.com/v1/search"
+  URL = "https://api.spotify.com/v1/search"
   headers = getAuthHeader(token)
   query = f"?q={artistName}&type=artist&limit=1"
   
-  queryUrl = url + query
+  queryUrl = URL + query
   result = get(queryUrl, headers=headers)
   jsonResult = json.loads(result.content)
   print(jsonResult["artists"]["items"])
 
 @lru_cache(maxsize=5)
 def getPlaylist(token, playListID): 
-  url = f"https://api.spotify.com/v1/playlists/{playListID}"
+  URL = f"https://api.spotify.com/v1/playlists/{playListID}"
   headers = getAuthHeader(token)
-  result = get(url, headers=headers)
+  result = get(URL, headers=headers)
   jsonResult = json.loads(result.content)
   # json.dump((jsonResult["tracks"]["items"][0]["track"]["id"]), open('spotigfy.json', 'w'), indent=2)
   return jsonResult
 
 def getSongInfo(playlist, token, id): 
-  url = f"https://api.spotify.com/v1/audio-features/{id}"
+  URL = f"https://api.spotify.com/v1/audio-features/{id}"
   headers = getAuthHeader(token)
-  result = get(url, headers=headers)
+  result = get(URL, headers=headers)
   jsonResult = json.loads(result.content)
   # json.dump(jsonResult, open(f'songInfo{playlist}.json', 'a'), indent=2)
   return jsonResult
@@ -115,7 +115,7 @@ def formatData(item, playlist):
   data = [songName] + [songid] + [Albumid] + data
   data.append(vectorNormalizer([data[4], data[12], data[13]]))
 
-def csvSave(playlist):
+def csvSave(playlist, token):
   os.system("clear")
   os.chdir("./playList/")
   playlistRaw = getPlaylist(token, getPlayListID())
@@ -135,7 +135,7 @@ def main():
   os.system("clear")
   os.chdir(".")
   token = getToken()
-  csvSave(PLAYLISTNAME)
+  csvSave(PLAYLISTNAME, token)
   songVector = []
   os.chdir("../playList")
   with open(f'{PLAYLISTNAME}.csv', newline='') as csvfile:
