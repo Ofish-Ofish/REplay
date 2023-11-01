@@ -74,23 +74,14 @@ def getPlayListID():
   playListID = playListID.split("?")[0]
   return playListID
 
-def vectorNormalizer(playlist):
-  os.chdir("./playList/")
-  playlistSongs = []
-  with open(f'{playlist}.csv', newline='') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter='~', quotechar='|')
-    for row in spamreader:
-      if row[7].isalpha():
-        continue
-      v = numpy.vectorize(float)([row[4], row[12], row[13]])
-      normalized_v = v / numpy.sqrt(numpy.sum(v**2))
-      playlistSongs.append(normalized_v)
-    return playlistSongs
-
-def similarity(playlistSongs):
-  v = numpy.cross(playlistSongs[0], playlistSongs[1])
-  print(numpy.sqrt(numpy.sum(v**2)))
-  v = numpy.cross(playlistSongs[0], playlistSongs[2])
+def vectorNormalizer(threeitmeList):
+  v = numpy.vectorize(float)(threeitmeList)
+  normalized_v = v / numpy.sqrt(numpy.sum(v**2))
+  return normalized_v
+  
+def similarity(cs,s):
+  print(cs + s)
+  v = numpy.cross(cs, s)
   print(numpy.sqrt(numpy.sum(v**2)))
 
 def downloadPlayList(): 
@@ -120,14 +111,14 @@ def csvSave(playlist):
   with open(f"{playlist}.csv",'w',newline='',encoding='utf-8') as f:
     writer = csv.writer(f, delimiter='~')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
-  for i in playlistRaw["tracks"]["items"]:
-    songName = i["track"]["name"].replace("[", "").replace("]", "").replace("~", "")
-    songid = i["track"]["id"]
-    Albumid = i["track"]["album"]["id"]
-    data = (getSongInfo(playlist,token, i["track"]["id"]))
-    data = list(data.values())
-    data = [songName] + [songid] + [Albumid] + data
-    with open(f"{playlist}.csv",'a',newline='', encoding='utf-8') as f:
+    for i in playlistRaw["tracks"]["items"]:
+      songName = i["track"]["name"].replace("[", "").replace("]", "").replace("~", "")
+      songid = i["track"]["id"]
+      Albumid = i["track"]["album"]["id"]
+      data = (getSongInfo(playlist,token, i["track"]["id"]))
+      data = list(data.values())
+      data = [songName] + [songid] + [Albumid] + data
+      data.append(vectorNormalizer([data[4], data[12], data[13]]))
       writer = csv.writer(f, delimiter='~')
       writer.writerow(data)
 
@@ -136,4 +127,15 @@ if __name__ == '__main__':
   os.chdir(".")
   token = getToken()
   # csvSave("w")
-  similarity(vectorNormalizer("w"))
+  songVector = []
+  os.chdir("./playList")
+  with open(f'{"w"}.csv', newline='') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter='~', quotechar='|')
+    for row in spamreader:
+      for row in spamreader:
+        if row[7].isalpha():
+          continue
+        songVector.append(row[-1])
+  randomSong = random.choice(songVector)
+  for i in songVector:
+    print(similarity(randomSong.replace(" ",","),i.replace(" ",",")))
