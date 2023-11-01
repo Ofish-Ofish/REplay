@@ -119,7 +119,7 @@ def csvSave(playlist, token):
   os.system("clear")
   os.chdir("./playList/")
   playlistRaw = getPlaylist(token, getPlayListID())
-  with open(f"{playlist}.csv",'w',newline='',encoding='utf-8') as f:
+  with open(f"{playlist}.csv",'w',newline='', encoding='utf-8') as f:
     writer = csv.writer(f, delimiter='~')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
     for i in playlistRaw["tracks"]["items"]:
