@@ -77,6 +77,8 @@ def getPlayListID():
   return playListID
 
 def vectorNormalizer(threeitmeList):
+  if len(threeitmeList) != 3:
+    raise f"length error... list length is {len(threeitmeList)}, not 3"
   v = numpy.vectorize(float)(threeitmeList)
   normalized_v = v / numpy.sqrt(numpy.sum(v**2))
   return normalized_v
@@ -104,6 +106,14 @@ def downloadPlayList():
     songID = youtubeSearch["items"][0]["id"]["videoId"]
     playListSongSave(songID, playlist)
 
+def formatData(item, playlist):
+  songName = item["track"]["name"].replace("[", "").replace("]", "").replace("~", "")
+  songid = item["track"]["id"]
+  Albumid = item["track"]["album"]["id"]
+  data = getSongInfo(playlist, token, item["track"]["id"])
+  data = list(data.values())
+  data = [songName] + [songid] + [Albumid] + data
+  data.append(vectorNormalizer([data[4], data[12], data[13]]))
 
 def csvSave(playlist):
   os.system("clear")
@@ -113,13 +123,8 @@ def csvSave(playlist):
     writer = csv.writer(f, delimiter='~')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
     for i in playlistRaw["tracks"]["items"]:
-      songName = i["track"]["name"].replace("[", "").replace("]", "").replace("~", "")
-      songid = i["track"]["id"]
-      Albumid = i["track"]["album"]["id"]
-      data = (getSongInfo(playlist,token, i["track"]["id"]))
-      data = list(data.values())
-      data = [songName] + [songid] + [Albumid] + data
-      data.append(vectorNormalizer([data[4], data[12], data[13]]))
+      data = formatData(i, playlist)
+
       writer = csv.writer(f, delimiter='~')
       writer.writerow(data)
 
@@ -137,10 +142,9 @@ if __name__ == '__main__':
   with open(f'{PLAYLISTNAME}.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter='~', quotechar='|')
     for row in spamreader:
-      for row in spamreader:
-        if row[7].isalpha():
-          continue
-        songVector.append(row[-1])
+      if row[7].isalpha():
+        continue
+      songVector.append(row[-1])
   randomSong = random.choice(songVector)
   for i in songVector:
     print(similarity(stringToVec(randomSong),stringToVec(i)))
