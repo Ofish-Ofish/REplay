@@ -11,6 +11,8 @@ from multiprocessing import Process
 import csv
 import random
 
+PLAYLISTNAME = "play"
+
 
 load_dotenv()
 
@@ -80,9 +82,8 @@ def vectorNormalizer(threeitmeList):
   return normalized_v
   
 def similarity(cs,s):
-  print(cs + s)
   v = numpy.cross(cs, s)
-  print(numpy.sqrt(numpy.sum(v**2)))
+  return numpy.sqrt(numpy.sum(v**2))
 
 def downloadPlayList(): 
   os.system("clear")
@@ -122,14 +123,18 @@ def csvSave(playlist):
       writer = csv.writer(f, delimiter='~')
       writer.writerow(data)
 
+def stringToVec(string):
+  return numpy.vectorize(float)([x for x in string[1:-1].split(" ") if x != ''])
+
 if __name__ == '__main__':
+
   os.system("clear")
   os.chdir(".")
   token = getToken()
-  # csvSave("w")
+  csvSave(PLAYLISTNAME)
   songVector = []
-  os.chdir("./playList")
-  with open(f'{"w"}.csv', newline='') as csvfile:
+  os.chdir("../playList")
+  with open(f'{PLAYLISTNAME}.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter='~', quotechar='|')
     for row in spamreader:
       for row in spamreader:
@@ -138,4 +143,4 @@ if __name__ == '__main__':
         songVector.append(row[-1])
   randomSong = random.choice(songVector)
   for i in songVector:
-    print(similarity(randomSong.replace(" ",","),i.replace(" ",",")))
+    print(similarity(stringToVec(randomSong),stringToVec(i)))
