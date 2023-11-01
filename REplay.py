@@ -131,8 +131,7 @@ def csvSave(playlist):
 def stringToVec(string):
   return numpy.vectorize(float)([x for x in string[1:-1].split(" ") if x != ''])
 
-if __name__ == '__main__':
-
+def main():
   os.system("clear")
   os.chdir(".")
   token = getToken()
@@ -148,3 +147,6 @@ if __name__ == '__main__':
   randomSong = random.choice(songVector)
   for i in songVector:
     print(similarity(stringToVec(randomSong),stringToVec(i)))
+
+if __name__ == '__main__':
+  main()
