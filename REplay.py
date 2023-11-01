@@ -82,7 +82,7 @@ def vectorNormalizer(playlist):
     for row in spamreader:
       if row[7].isalpha():
         continue
-      v = numpy.vectorize(float)([row[7], row[12], row[13]])
+      v = numpy.vectorize(float)([row[4], row[12], row[13]])
       normalized_v = v / numpy.sqrt(numpy.sum(v**2))
       playlistSongs.append(normalized_v)
     return playlistSongs
@@ -92,8 +92,6 @@ def similarity(playlistSongs):
   print(numpy.sqrt(numpy.sum(v**2)))
   v = numpy.cross(playlistSongs[0], playlistSongs[2])
   print(numpy.sqrt(numpy.sum(v**2)))
-
-
 
 def downloadPlayList(): 
   os.system("clear")
