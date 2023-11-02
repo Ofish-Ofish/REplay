@@ -11,7 +11,7 @@ from multiprocessing import Process
 import csv
 import random
 
-PLAYLISTNAME = "play"
+PLAYLISTNAME = "w"
 
 load_dotenv()
 
@@ -84,7 +84,7 @@ def vectorNormalizer(threeitmeList):
   
 def similarity(cs,s):
   v = numpy.cross(cs, s)
-  return numpy.sqrt(numpy.sum(v**2))
+  return numpy.sqrt(numpy.sum(v**2)) * 1000
 
 def downloadPlayList(token): 
   os.system("clear")
@@ -135,9 +135,9 @@ def main():
   os.system("clear")
   os.chdir(".")
   token = getToken()
-  csvSave(PLAYLISTNAME, token)
+  # csvSave(PLAYLISTNAME, token)
   songVector = []
-  os.chdir("../playList")
+  os.chdir("./playList")
   with open(f'{PLAYLISTNAME}.csv', newline='') as csvfile:
     spamreader = csv.reader(csvfile, delimiter='~', quotechar='|')
     for row in spamreader:
