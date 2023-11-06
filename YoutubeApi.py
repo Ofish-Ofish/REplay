@@ -30,7 +30,7 @@ def YoutubeSearch(query,maxResults):
 
 
 @lru_cache(maxsize=5)
-def songSave(respSongNameonse, songID):
+def songSave(SongName,songID, playlist):
   # json.dump((response["items"][0]["id"]["videoId"]), open('youtube.json', 'w'), indent=2)
   yt = YouTube("https://www.youtube.com/watch?v="+songID) 
   video = yt.streams.filter(only_audio=True).first() 
