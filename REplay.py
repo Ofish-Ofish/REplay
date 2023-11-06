@@ -86,7 +86,11 @@ def similarity(cs,s):
   v = numpy.cross(cs, s)
   return numpy.sqrt(numpy.sum(v**2)) * 1000
 
-def downloadPlayList(token): 
+def downloadPlayList(youtubeSearch,songName,playlist): 
+  songID = youtubeSearch["items"][0]["id"]["videoId"]
+  playListSongSave(songName, songID, playlist)
+
+def createPlayList():
   os.system("clear")
   playlist = input("please add the name of your playlist: ")
   playlist = playlist.replace(" ", "_")
@@ -98,17 +102,15 @@ def downloadPlayList(token):
   os.chdir("./playList/")
   os.makedirs(playlist)
   os.chdir(playlist)
-  playlistRaw = getPlaylist(token, getPlayListID())
-  for i in playlistRaw["tracks"]["items"]:
-    songName = i["track"]["name"].replace("[", "").replace("]", "").replace("~", "")
-    youtubeSearch = YoutubeSearch(songName,1)
-    songID = youtubeSearch["items"][0]["id"]["videoId"]
-    playListSongSave(songID, playlist)
+
 
 def formatData(item, playlist, token):
-  songName = item["track"]["name"].replace("[", "").replace("]", "").replace("~", "")
+  songName = item["track"]["name"]
   songid = item["track"]["id"]
   Albumid = item["track"]["album"]["id"]
+  youtubeSearch = YoutubeSearch(songName,1)
+  songName = youtubeSearch["items"][0]["snippet"]["title"].replace("[", "").replace("]", "").replace(",", "")
+
   data = getSongInfo(playlist, token, item["track"]["id"])
   data = list(data.values())
   data = [songName] + [songid] + [Albumid] + data
@@ -120,33 +122,44 @@ def csvSave(playlist, token):
   os.chdir("./playList/")
   playlistRaw = getPlaylist(token, getPlayListID())
   with open(f"{playlist}.csv",'w',newline='', encoding='utf-8') as f:
-    writer = csv.writer(f, delimiter='~')
+    writer = csv.writer(f, delimiter=',')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
     for i in playlistRaw["tracks"]["items"]:
       data = formatData(i, playlist, token)
-
-      writer = csv.writer(f, delimiter='~')
+      writer = csv.writer(f, delimiter=',')
       writer.writerow(data)
 
 def stringToVec(string):
   return numpy.vectorize(float)([x for x in string[1:-1].split(" ") if x != ''])
+
+def shuffle():
+  songVector = []
+  songName = []
+  Albumid = []
+  crosses = []
+  os.chdir("./playList")
+  with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
+    spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+    for row in spamreader:
+      if row[7].isalpha():
+        continue
+      songVector.append(row[-1])
+      songName.append(row[0])
+      Albumid.append(row[2])
+  randomSong = random.choice(songVector)
+  for i in range(len(songVector)):
+    cross = similarity(stringToVec(randomSong),stringToVec(songVector[i]))
+    crosses.append(cross)
+    print(songName[i],cross)
+  print(sorted(crosses))
+
 
 def main():
   os.system("clear")
   os.chdir(".")
   token = getToken()
   # csvSave(PLAYLISTNAME, token)
-  songVector = []
-  os.chdir("./playList")
-  with open(f'{PLAYLISTNAME}.csv', newline='') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter='~', quotechar='|')
-    for row in spamreader:
-      if row[7].isalpha():
-        continue
-      songVector.append(row[-1])
-  randomSong = random.choice(songVector)
-  for i in songVector:
-    print(similarity(stringToVec(randomSong),stringToVec(i)))
+  shuffle()
 
 if __name__ == '__main__':
   main()
