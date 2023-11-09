@@ -135,7 +135,7 @@ def shuffle():
   # save csv as a modifable list of dics
   dictList = []
   with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
-    dictlist = [row for row in csv.DictReader(csvfile, delimiter=',', quotechar='|')]
+    dictList = [row for row in csv.DictReader(csvfile, delimiter=',', quotechar='|')]
   
   # choose random song and remove all songs witht he same albumid
   randomSongDict = random.choice(dictList)
