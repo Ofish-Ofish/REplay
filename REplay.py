@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-import numpy
+import numpy as np
 import base64
 from requests import post, get
 import json
@@ -75,13 +75,13 @@ def getPlayListID():
 def vectorNormalizer(threeitmeList):
   if len(threeitmeList) != 3:
     raise f"length error... list length is {len(threeitmeList)}, not 3"
-  v = numpy.vectorize(float)(threeitmeList)
-  normalized_v = v / numpy.sqrt(numpy.sum(v**2))
+  v = np.vectorize(float)(threeitmeList)
+  normalized_v = v / np.sqrt(np.sum(v**2))
   return normalized_v
   
 def similarity(cs,s):
-  v = numpy.cross(cs, s)
-  return numpy.sqrt(numpy.sum(v**2)) * 1000
+  v = np.cross(cs, s)
+  return np.sqrt(np.sum(v**2)) * 1000
 
 def downloadPlayList(youtubeSearch,songName,playlist): 
   songID = youtubeSearch["items"][0]["id"]["videoId"]
@@ -106,7 +106,7 @@ def formatData(item, playlist, token):
   songid = item["track"]["id"]
   Albumid = item["track"]["album"]["id"]
   youtubeSearch = YoutubeSearch(songName,1)
-  songName = youtubeSearch["items"][0]["snippet"]["title"].replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replcae("&quot;","")
+  songName = youtubeSearch["items"][0]["snippet"]["title"].replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replace("&quot;","")
 
   data = getSongInfo(playlist, token, item["track"]["id"])
   data = list(data.values())
@@ -127,36 +127,48 @@ def csvSave(playlist, token):
       writer.writerow(data)
 
 def stringToVec(string):
-  return numpy.vectorize(float)([x for x in string[1:-1].split(" ") if x != ''])
+  return np.vectorize(float)([x for x in string[1:-1].split(" ") if x != ''])
 
 def shuffle():
-  songVector = []
-  songName = []
-  Albumid = []
-  crosses = []
   os.chdir("./playList")
-  with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-    for row in spamreader:
-      if row[7].isalpha():
-        continue
-      songVector.append(row[-1])
-      songName.append(row[0])
-      Albumid.append(row[2])
-  randomSong = random.choice(songVector)
-  for i in range(len(songVector)):
-    cross = similarity(stringToVec(randomSong),stringToVec(songVector[i]))
-    crosses.append(cross)
-    print(songName[i],cross)
-  print(sorted(crosses))
 
+  # save csv as a modifable list of dics
+  dictList = []
+  with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
+    reader = csv.DictReader(csvfile, delimiter=',', quotechar='|')
+    for row in reader:
+      dictList.append(row)
+  
+  # choose random song and remove all songs witht he same albumid
+  randomSongDict = random.choice(dictList)
+  to_remove = []
+  for i in range(len(dictList)-1):
+    if dictList[i]['Albumid'] == randomSongDict["Albumid"]:
+      to_remove.append(i)
+  for index in reversed(to_remove):
+    dictList.pop(index)
+
+  # get a list of all crosses
+  crosses = np.array([])
+  for i in range(len(dictList)-1):
+    dictList[i]["cross"] = similarity(stringToVec(randomSongDict['vector']),stringToVec(dictList[i]['vector']))
+    crosses = np.append(crosses,dictList[i]["cross"])
+  
+  # return 10 songs. the first song being the random one picked at the start; the rest of the songs are the 9 most siliar songs shuffled
+  crosses = np.argsort(crosses)[:9]
+  suffleSongList = []
+  for i in crosses:
+    suffleSongList.append(dictList[i]["songName"])
+  random.shuffle(suffleSongList)
+  suffleSongList = [randomSongDict['songName']] + suffleSongList
+  return suffleSongList
 
 def main():
   os.system("clear")
   os.chdir(".")
   token = getToken()
   # csvSave(PLAYLISTNAME, token)
-  shuffle()
+  pprint.pprint(shuffle())
 
 if __name__ == '__main__':
   main()
