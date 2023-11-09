@@ -131,7 +131,6 @@ def stringToVec(string):
 
 def shuffle():
   os.chdir("./playList")
-
   # save csv as a modifable list of dics
   dictList = []
   with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
