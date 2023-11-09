@@ -18,13 +18,10 @@ load_dotenv()
 clientId = os.getenv("CLIENT_ID")
 clientSecret = os.getenv("CLIENT_SECRET")
 
-
 def getToken():
   authString = clientId + ":" + clientSecret
   authByte = authString.encode("utf-8")
   authBase64 = str(base64.b64encode(authByte), "utf-8")
-
-
   URL = "https://accounts.spotify.com/api/token"
   headers = {
     "Authorization": "Basic " + authBase64,
@@ -109,7 +106,7 @@ def formatData(item, playlist, token):
   songid = item["track"]["id"]
   Albumid = item["track"]["album"]["id"]
   youtubeSearch = YoutubeSearch(songName,1)
-  songName = youtubeSearch["items"][0]["snippet"]["title"].replace("[", "").replace("]", "").replace(",", "")
+  songName = youtubeSearch["items"][0]["snippet"]["title"].replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replcae("&quot;","")
 
   data = getSongInfo(playlist, token, item["track"]["id"])
   data = list(data.values())
