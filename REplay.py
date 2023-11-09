@@ -135,30 +135,23 @@ def shuffle():
   # save csv as a modifable list of dics
   dictList = []
   with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
-    reader = csv.DictReader(csvfile, delimiter=',', quotechar='|')
-    for row in reader:
-      dictList.append(row)
+    dictlist = [row for row in csv.DictReader(csvfile, delimiter=',', quotechar='|')]
   
   # choose random song and remove all songs witht he same albumid
   randomSongDict = random.choice(dictList)
-  to_remove = []
-  for i in range(len(dictList)-1):
-    if dictList[i]['Albumid'] == randomSongDict["Albumid"]:
-      to_remove.append(i)
+  to_remove = [x for x in reversed(range(len(dictList)-1)) if dictList[x]['Albumid'] == randomSongDict["Albumid"]]
   for index in reversed(to_remove):
     dictList.pop(index)
 
   # get a list of all crosses
   crosses = np.array([])
-  for i in range(len(dictList)-1):
-    dictList[i]["cross"] = similarity(stringToVec(randomSongDict['vector']),stringToVec(dictList[i]['vector']))
+  for i in range(len(dictList) - 1):
+    dictList[i]["cross"] = similarity(stringToVec(randomSongDict['vector']), stringToVec(dictList[i]['vector']))
     crosses = np.append(crosses,dictList[i]["cross"])
   
   # return 10 songs. the first song being the random one picked at the start; the rest of the songs are the 9 most siliar songs shuffled
   crosses = np.argsort(crosses)[:9]
-  suffleSongList = []
-  for i in crosses:
-    suffleSongList.append(dictList[i]["songName"])
+  suffleSongList = [dictList[i]["songName"] for i in crosses]
   random.shuffle(suffleSongList)
   suffleSongList = [randomSongDict['songName']] + suffleSongList
   return suffleSongList
