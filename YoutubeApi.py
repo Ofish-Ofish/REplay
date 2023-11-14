@@ -3,31 +3,20 @@ import os
 import googleapiclient.discovery
 import pprint as pprint
 from functools import cache, lru_cache
-from pytube import YouTube 
+from pytube import YouTube
+from pytube import Search
+import urllib.request
+import re
+
 
 load_dotenv()
 
-@lru_cache(maxsize=5)
-def YoutubeSearch(query,maxResults):
-  api_service_name = "youtube"
-  api_version = "v3"
-  DEVELOPER_KEY = os.getenv("GOOGLE_API_KEY")
-
-  youtube = googleapiclient.discovery.build(
-    api_service_name, api_version, developerKey = DEVELOPER_KEY
-  )
-
-  request = youtube.search().list(
-    part='snippet',
-    q = query,
-    maxResults=maxResults,
-    order="relevance",
-    type="video"
-  )
-
-  response = request.execute()
-  return response
-
+def YoutubeSearch():
+  search_keyword="Boulanger:+Vielle+priere+bouddhique+(Priere+quotidienne+pour+tout+lUnivers)+For+Tenor+Chorus"
+  html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
+  # pprint.pprint(html.read().decode())
+  video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
+  print("https://www.youtube.com/watch?v=" + video_ids[0])
 
 @lru_cache(maxsize=5)
 def songSave(SongName,songID, playlist):

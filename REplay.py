@@ -156,11 +156,12 @@ def shuffle():
   return suffleSongList
 
 def main():
-  os.system("clear")
+  # os.system("clear")
   os.chdir(".")
   token = getToken()
   # csvSave(PLAYLISTNAME, token)
-  pprint.pprint(shuffle())
+  # pprint.pprint(shuffle())
+  YoutubeSearch()
 
 if __name__ == '__main__':
   main()
