@@ -150,10 +150,10 @@ def shuffle():
   
   # return 10 songs. the first song being the random one picked at the start; the rest of the songs are the 9 most siliar songs shuffled
   crosses = np.argsort(crosses)[:9]
-  suffleSongList = [dictList[i]["songName"] for i in crosses]
-  random.shuffle(suffleSongList)
-  suffleSongList = [randomSongDict['songName']] + suffleSongList
-  return suffleSongList
+  shuffleSongList = [dictList[i]["songName"] for i in crosses]
+  random.shuffle(shuffleSongList)
+  shuffleSongList = [randomSongDict['songName']] + shuffleSongList
+  return shuffleSongList
 
 def main():
   # os.system("clear")

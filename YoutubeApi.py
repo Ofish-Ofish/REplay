@@ -14,8 +14,7 @@ load_dotenv()
 def YoutubeSearch():
   search_keyword="Boulanger:+Vielle+priere+bouddhique+(Priere+quotidienne+pour+tout+lUnivers)+For+Tenor+Chorus"
   html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
-  # pprint.pprint(html.read().decode())
-  video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
+  video_ids = re.findall(r"watch\?v=([^&=]+)", html.read().decode())
   print("https://www.youtube.com/watch?v=" + video_ids[0])
 
 @lru_cache(maxsize=5)
