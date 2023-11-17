@@ -15,7 +15,7 @@ load_dotenv()
 def YoutubeSearch(search_keyword):
   results = []
   html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
-  html = html.read().decode()
+  html = html.read().decode(html.headers.get_content_charset())
   soup = BeautifulSoup(html, 'html.parser')
   scripts = soup.find_all('script')
   for script in scripts:

@@ -161,7 +161,7 @@ def main():
   token = getToken()
   # csvSave(PLAYLISTNAME, token)
   # pprint.pprint(shuffle())
-  keyward = "Beethoven - Moonlight Sonata (3rd Movement)".strip().replace(" ", "+")
+  keyward = "כאן".strip().replace(" ", "+")
   pprint.pprint(YoutubeSearch(keyward))
 
 if __name__ == '__main__':
