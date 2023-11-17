@@ -7,15 +7,27 @@ from pytube import YouTube
 from pytube import Search
 import urllib.request
 import re
-
+from bs4 import BeautifulSoup
+import json
 
 load_dotenv()
 
-def YoutubeSearch():
-  search_keyword="Boulanger:+Vielle+priere+bouddhique+(Priere+quotidienne+pour+tout+lUnivers)+For+Tenor+Chorus"
+def YoutubeSearch(search_keyword):
+  results = []
   html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
-  video_ids = re.findall(r"watch\?v=([^&=]+)", html.read().decode())
-  print("https://www.youtube.com/watch?v=" + video_ids[0])
+  html = html.read().decode()
+  soup = BeautifulSoup(html, 'html.parser')
+  scripts = soup.find_all('script')
+  for script in scripts:
+    if re.findall(r"watch\?v=([^&=]+)", str(script)):
+      vidsData = script.string.split("ytInitialData = ")[1].replace(";", "").replace("</script>", "")
+      vidsData = json.loads(vidsData)
+      for i in range(10):
+        try:
+          results.append("https://www.youtube.com/watch?v="+vidsData["contents"]["twoColumnSearchResultsRenderer"]["primaryContents"]["sectionListRenderer"]["contents"][0]["itemSectionRenderer"]["contents"][i]["videoRenderer"]["videoId"])
+        except:
+          continue
+      return results
 
 @lru_cache(maxsize=5)
 def songSave(SongName,songID, playlist):

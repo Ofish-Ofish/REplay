@@ -161,7 +161,7 @@ def main():
   token = getToken()
   # csvSave(PLAYLISTNAME, token)
   # pprint.pprint(shuffle())
-  YoutubeSearch()
+  pprint.pprint(YoutubeSearch("Boulanger:+Vielle+priere+bouddhique+(Priere+quotidienne+pour+tout+lUnivers)+For+Tenor+Chorus"))
 
 if __name__ == '__main__':
   main()
