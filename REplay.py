@@ -156,12 +156,13 @@ def shuffle():
   return shuffleSongList
 
 def main():
-  # os.system("clear")
+  # os.system("clear")  
   os.chdir(".")
   token = getToken()
   # csvSave(PLAYLISTNAME, token)
   # pprint.pprint(shuffle())
-  pprint.pprint(YoutubeSearch("Boulanger:+Vielle+priere+bouddhique+(Priere+quotidienne+pour+tout+lUnivers)+For+Tenor+Chorus"))
+  keyward = "Beethoven - Moonlight Sonata (3rd Movement)".strip().replace(" ", "+")
+  pprint.pprint(YoutubeSearch(keyward))
 
 if __name__ == '__main__':
   main()
