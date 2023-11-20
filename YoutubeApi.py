@@ -12,10 +12,11 @@ import json
 
 load_dotenv()
 
-def YoutubeSearch(search_keyword):
+def YoutubeSearch(searchKeyword):
   results = []
-  html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
-  html = html.read().decode(html.headers.get_content_charset())
+  searchKeyword = urllib.parse.quote(searchKeyword)
+  html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + searchKeyword)
+  html = html.read().decode('utf-8')
   soup = BeautifulSoup(html, 'html.parser')
   scripts = soup.find_all('script')
   for script in scripts:
