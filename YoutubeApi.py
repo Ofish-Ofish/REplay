@@ -4,7 +4,6 @@ import googleapiclient.discovery
 import pprint as pprint
 from functools import cache, lru_cache
 from pytube import YouTube
-from pytube import Search
 import urllib.request
 import re
 from bs4 import BeautifulSoup
