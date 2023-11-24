@@ -161,7 +161,7 @@ def main():
   token = getToken()
   # csvSave(PLAYLISTNAME, token)
   # pprint.pprint(shuffle())
-  keyward = "glory to prussia".strip().replace(" ", "+")
+  keyward = "loves sorrow".strip().replace(" ", "+")
   pprint.pprint(YoutubeSearch(keyward))
 
 if __name__ == '__main__':
