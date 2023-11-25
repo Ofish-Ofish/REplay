@@ -83,31 +83,29 @@ def similarity(cs,s):
   v = np.cross(cs, s)
   return np.sqrt(np.sum(v**2)) * 1000
 
-def downloadPlayList(youtubeSearch,songName,playlist): 
-  songID = youtubeSearch["items"][0]["id"]["videoId"]
-  playListSongSave(songName, songID, playlist)
+def downloadPlayList(path, songName,): 
+  songUrl = YoutubeSearch(songName)
+  playListSongSave(songUrl, path, songName,)
 
 def createPlayList():
   os.system("clear")
   playlist = input("please add the name of your playlist: ")
   playlist = playlist.replace(" ", "_")
   path = "./playList/"
+  os.chdir(".")
   isExsist = os.path.exists(path)
   if not isExsist:
-    os.chdir(".")
     os.makedirs("playList")
-  os.chdir("./playList/")
+  os.chdir(path)
   os.makedirs(playlist)
   os.chdir(playlist)
+  return playlist
 
 
 def formatData(item, playlist, token):
-  songName = item["track"]["name"]
+  songName = item["track"]["name"].replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replace("&quot;","")
   songid = item["track"]["id"]
   Albumid = item["track"]["album"]["id"]
-  youtubeSearch = YoutubeSearch(songName,1)
-  songName = youtubeSearch["items"][0]["snippet"]["title"].replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replace("&quot;","")
-
   data = getSongInfo(playlist, token, item["track"]["id"])
   data = list(data.values())
   data = [songName] + [songid] + [Albumid] + data
@@ -116,7 +114,7 @@ def formatData(item, playlist, token):
 
 def csvSave(playlist, token):
   os.system("clear")
-  os.chdir("./playList/")
+  os.chdir(f".")
   playlistRaw = getPlaylist(token, getPlayListID())
   with open(f"{playlist}.csv",'w',newline='', encoding='utf-8') as f:
     writer = csv.writer(f, delimiter=',')
@@ -156,13 +154,14 @@ def shuffle():
   return shuffleSongList
 
 def main():
-  # os.system("clear")  
+  os.system("clear")  
   os.chdir(".")
   token = getToken()
-  # csvSave(PLAYLISTNAME, token)
+  PLAYLISTNAME = createPlayList()
+  csvSave(PLAYLISTNAME, token)
   # pprint.pprint(shuffle())
-  keyward = "loves sorrow".strip().replace(" ", "+")
-  pprint.pprint(YoutubeSearch(keyward))
+  # keyward = "loves sorrow".strip().replace(" ", "+")
+  # pprint.pprint(YoutubeSearch(keyward))
 
 if __name__ == '__main__':
   main()
