@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
 import os
-import googleapiclient.discovery
 import pprint as pprint
 from functools import cache, lru_cache
 from pytube import YouTube
