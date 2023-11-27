@@ -5,13 +5,13 @@ import base64
 from requests import post, get
 import json
 import pprint as pprint
-from YoutubeApi import YoutubeSearch, songSave, playListSongSave
+from YoutubeApi import YoutubeSearch, SongSave
 from functools import cache, lru_cache
 from multiprocessing import Process
 import csv
 import random
 
-PLAYLISTNAME = "w"
+PLAYLISTNAME = "classical"
 
 load_dotenv()
 
@@ -83,31 +83,35 @@ def similarity(cs,s):
   v = np.cross(cs, s)
   return np.sqrt(np.sum(v**2)) * 1000
 
-def downloadPlayList(youtubeSearch,songName,playlist): 
-  songID = youtubeSearch["items"][0]["id"]["videoId"]
-  playListSongSave(songName, songID, playlist)
+def downloadPlayList(playList): 
+  path = f"./playList/{playList}"
+  os.chdir(path)
+  with open(f"{playList}.csv", newline='', encoding='utf-8') as csvfile:
+    reader  = csv.DictReader(csvfile, delimiter=',', quotechar='|')
+    for row in reader:
+      songName = row["songName"]
+      songUrl = YoutubeSearch(songName)
+      SongSave(songUrl[0], path, songName,)
 
 def createPlayList():
   os.system("clear")
   playlist = input("please add the name of your playlist: ")
   playlist = playlist.replace(" ", "_")
   path = "./playList/"
+  os.chdir(".")
   isExsist = os.path.exists(path)
   if not isExsist:
-    os.chdir(".")
     os.makedirs("playList")
-  os.chdir("./playList/")
+  os.chdir(path)
   os.makedirs(playlist)
   os.chdir(playlist)
+  return playlist
 
 
 def formatData(item, playlist, token):
-  songName = item["track"]["name"]
+  songName = item["track"]["name"].replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replace("&quot;","")
   songid = item["track"]["id"]
   Albumid = item["track"]["album"]["id"]
-  youtubeSearch = YoutubeSearch(songName,1)
-  songName = youtubeSearch["items"][0]["snippet"]["title"].replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replace("&quot;","")
-
   data = getSongInfo(playlist, token, item["track"]["id"])
   data = list(data.values())
   data = [songName] + [songid] + [Albumid] + data
@@ -116,14 +120,14 @@ def formatData(item, playlist, token):
 
 def csvSave(playlist, token):
   os.system("clear")
-  os.chdir("./playList/")
+  os.chdir(f".")
   playlistRaw = getPlaylist(token, getPlayListID())
-  with open(f"{playlist}.csv",'w',newline='', encoding='utf-8') as f:
-    writer = csv.writer(f, delimiter=',')
+  with open(f"{playlist}.csv",'w',newline='', encoding='utf-8') as csvfile:
+    writer = csv.writer(csvfile, delimiter=',')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
     for i in playlistRaw["tracks"]["items"]:
       data = formatData(i, playlist, token)
-      writer = csv.writer(f, delimiter=',')
+      writer = csv.writer(csvfile, delimiter=',')
       writer.writerow(data)
 
 def stringToVec(string):
@@ -150,17 +154,21 @@ def shuffle():
   
   # return 10 songs. the first song being the random one picked at the start; the rest of the songs are the 9 most siliar songs shuffled
   crosses = np.argsort(crosses)[:9]
-  suffleSongList = [dictList[i]["songName"] for i in crosses]
-  random.shuffle(suffleSongList)
-  suffleSongList = [randomSongDict['songName']] + suffleSongList
-  return suffleSongList
+  shuffleSongList = [dictList[i]["songName"] for i in crosses]
+  random.shuffle(shuffleSongList)
+  shuffleSongList = [randomSongDict['songName']] + shuffleSongList
+  return shuffleSongList
 
 def main():
-  os.system("clear")
+  os.system("clear")  
   os.chdir(".")
-  token = getToken()
+  # token = getToken()
+  # PLAYLISTNAME = createPlayList()
   # csvSave(PLAYLISTNAME, token)
-  pprint.pprint(shuffle())
+  downloadPlayList(PLAYLISTNAME)
+  # pprint.pprint(shuffle())
+  # keyward = "loves sorrow".strip().replace(" ", "+")
+  # pprint.pprint(YoutubeSearch(keyward))
 
 if __name__ == '__main__':
   main()
