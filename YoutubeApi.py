@@ -29,20 +29,6 @@ def YoutubeSearch(searchKeyword):
       return results
 
 @lru_cache(maxsize=5)
-
-# def songSave(SongName,songID, playlist):
-#   # json.dump((response["items"][0]["id"]["videoId"]), open('youtube.json', 'w'), indent=2)
-#   yt = YouTube("https://www.youtube.com/watch?v="+songID) 
-#   video = yt.streams.filter(only_audio=True).first() 
-#   destination = './song'
-#   out_file = video.download(output_path=destination) 
-#   base, ext = os.path.splitext(out_file) 
-#   new_file = SongName + '.mp3'
-#   os.rename(out_file, new_file) 
-#   print(yt.title + " has been successfully downloaded.")
-
-# should be removed
-@lru_cache(maxsize=5)
 def SongSave(songUrl, path, SongName):
   yt = YouTube(songUrl) 
   video = yt.streams.filter(only_audio=True).first() 
