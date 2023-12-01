@@ -127,9 +127,11 @@ def csvSave(playlist, token):
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
     for i in playlistRaw["tracks"]["items"]:
-      print(time.time())
+      print("start of api",time.time(), i)
       data = formatData(i, playlist, token)
+      print("start of write",time.time())
       writer.writerow(data)
+      print("end of write",time.time())
 
 def stringToVec(string):
   return np.vectorize(float)([x for x in string[1:-1].split(" ") if x != ''])
@@ -164,9 +166,9 @@ def main():
   os.system("clear")  
   os.chdir(".")
   token = getToken()
-  PLAYLISTNAME = createPlayList()
-  csvSave(PLAYLISTNAME, token)
-  # downloadPlayList(PLAYLISTNAME)
+  # PLAYLISTNAME = createPlayList()
+  # csvSave(PLAYLISTNAME, token)
+  downloadPlayList(PLAYLISTNAME)
   # pprint.pprint(shuffle())
   # keyward = "loves sorrow".strip().replace(" ", "+")
   # pprint.pprint(YoutubeSearch(keyward))
