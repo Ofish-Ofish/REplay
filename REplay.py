@@ -10,6 +10,7 @@ from functools import cache, lru_cache
 from multiprocessing import Process
 import csv
 import random
+import time
 
 PLAYLISTNAME = "classical"
 
@@ -126,8 +127,8 @@ def csvSave(playlist, token):
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
     for i in playlistRaw["tracks"]["items"]:
+      print(time.time())
       data = formatData(i, playlist, token)
-      writer = csv.writer(csvfile, delimiter=',')
       writer.writerow(data)
 
 def stringToVec(string):
@@ -162,10 +163,10 @@ def shuffle():
 def main():
   os.system("clear")  
   os.chdir(".")
-  # token = getToken()
-  # PLAYLISTNAME = createPlayList()
-  # csvSave(PLAYLISTNAME, token)
-  downloadPlayList(PLAYLISTNAME)
+  token = getToken()
+  PLAYLISTNAME = createPlayList()
+  csvSave(PLAYLISTNAME, token)
+  # downloadPlayList(PLAYLISTNAME)
   # pprint.pprint(shuffle())
   # keyward = "loves sorrow".strip().replace(" ", "+")
   # pprint.pprint(YoutubeSearch(keyward))
