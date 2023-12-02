@@ -30,12 +30,8 @@ def YoutubeSearch(searchKeyword):
 
 @lru_cache(maxsize=5)
 def SongSave(songUrl, path, SongName):
-  yt = YouTube(songUrl) 
-  video = yt.streams.filter(only_audio=True).first() 
-  destination = path
-  out_file = video.download(output_path=destination) 
-  base, ext = os.path.splitext(out_file) 
-  new_file = SongName + '.mp3'
-  os.rename(out_file, new_file) 
-  print(yt.title + " has been successfully downloaded.")
-
+  try:
+    YouTube(songUrl).streams.get_audio_only("mp4").download(filename= SongName + ".mp3")
+    print("The video is downloaded in MP3")
+  except KeyError:
+    print("Unable to fetch video information. Please check the video URL or your network connection.")

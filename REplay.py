@@ -91,7 +91,14 @@ def downloadPlayList(playList):
     reader  = csv.DictReader(csvfile, delimiter=',', quotechar='|')
     for row in reader:
       songName = row["songName"]
-      songUrl = YoutubeSearch(songName)
+      songUrl = YoutubeSearch(songName.strip().replace(" ", "+"))
+      loop = 0
+      while len(songUrl) < 1:
+        songUrl = YoutubeSearch(songName.strip().replace(" ", "+"))
+        loop += 1
+        print(loop)
+        if loop > 20:
+          continue
       SongSave(songUrl[0], path, songName,)
 
 def createPlayList():
@@ -110,7 +117,7 @@ def createPlayList():
 
 
 def formatData(item, playlist, token):
-  songName = item["track"]["name"].replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replace("&quot;","")
+  songName = item["track"]["name"].replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replace("&quot;","").replace('.', "").replace(':', "").replace('/', "").replace('\\', "").replace('|', "")
   songid = item["track"]["id"]
   Albumid = item["track"]["album"]["id"]
   data = getSongInfo(playlist, token, item["track"]["id"])
@@ -127,7 +134,7 @@ def csvSave(playlist, token):
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
     for i in playlistRaw["tracks"]["items"]:
-      print("start of api",time.time(), i)
+      print("start of api",time.time(), )
       data = formatData(i, playlist, token)
       print("start of write",time.time())
       writer.writerow(data)
@@ -166,12 +173,12 @@ def main():
   os.system("clear")  
   os.chdir(".")
   token = getToken()
-  # PLAYLISTNAME = createPlayList()
-  # csvSave(PLAYLISTNAME, token)
+  PLAYLISTNAME = createPlayList()
+  csvSave(PLAYLISTNAME, token)
   downloadPlayList(PLAYLISTNAME)
   # pprint.pprint(shuffle())
-  # keyward = "loves sorrow".strip().replace(" ", "+")
-  # pprint.pprint(YoutubeSearch(keyward))
+  # keyward = "taking whats not yours".strip().replace(" ", "+")
+  # pprint.pprint(YoutubeSearch(keyward)[0])
 
 if __name__ == '__main__':
   main()
