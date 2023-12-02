@@ -115,7 +115,6 @@ def createPlayList():
   os.chdir(playlist)
   return playlist
 
-
 def formatData(item, playlist, token):
   songName = item["track"]["name"].replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replace("&quot;","").replace('.', "").replace(':', "").replace('/', "").replace('\\', "").replace('|', "")
   songid = item["track"]["id"]
