@@ -27,6 +27,8 @@ share/python-wheels/
 .env
 *.wav
 *.mp3
+*.mp4
+*.webm
 *.csv
 MANIFEST
 
