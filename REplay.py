@@ -13,6 +13,7 @@ import random
 import time
 
 PLAYLISTNAME = "classical"
+ERROR_LIMIT = 20
 
 load_dotenv()
 
@@ -84,7 +85,7 @@ def similarity(cs,s):
   v = np.cross(cs, s)
   return np.sqrt(np.sum(v**2)) * 1000
 
-def downloadPlayList(playList): 
+def downloadPlayList(playList, errorLimit): 
   path = f"./playList/{playList}"
   os.chdir(path)
   with open(f"{playList}.csv", newline='', encoding='utf-8') as csvfile:
@@ -92,14 +93,24 @@ def downloadPlayList(playList):
     for row in reader:
       songName = row["songName"]
       songUrl = YoutubeSearch(songName.strip().replace(" ", "+"))
-      loop = 0
-      while len(songUrl) < 1:
-        songUrl = YoutubeSearch(songName.strip().replace(" ", "+"))
-        loop += 1
-        print(loop)
-        if loop > 20:
-          continue
+      for i in range(errorLimit):
+        if len(songUrl) < 1:
+          songUrl = YoutubeSearch(songName.strip().replace(" ", "+")) 
+          print(i)
+        else: break
       SongSave(songUrl[0], path, songName,)
+
+def downloadSong(errorLimit): 
+  path = f"./song"
+  os.chdir(path)
+  songName = input("please enter a song name: ").replace("[", "").replace("]", "").replace(",", "").replace("'", "").replace('"', "").replace('&#39;', "").replace("&amp;","").replace("&quot;","").replace('.', "").replace(':', "").replace('/', "").replace('\\', "").replace('|', "")
+  songUrl = YoutubeSearch(songName.strip().replace(" ", "+"))
+  for i in range(errorLimit):
+    if len(songUrl) < 1:
+      songUrl = YoutubeSearch(songName.strip().replace(" ", "+"))
+      print(i)
+    else: break
+  SongSave(songUrl[0], path, songName)
 
 def createPlayList():
   os.system("clear")
@@ -172,9 +183,10 @@ def main():
   os.system("clear")  
   os.chdir(".")
   token = getToken()
-  PLAYLISTNAME = createPlayList()
-  csvSave(PLAYLISTNAME, token)
-  downloadPlayList(PLAYLISTNAME)
+  # PLAYLISTNAME = createPlayList()
+  # csvSave(PLAYLISTNAME, token)
+  # downloadPlayList(PLAYLISTNAME)
+  downloadSong(ERROR_LIMIT)
   # pprint.pprint(shuffle())
   # keyward = "taking whats not yours".strip().replace(" ", "+")
   # pprint.pprint(YoutubeSearch(keyward)[0])
