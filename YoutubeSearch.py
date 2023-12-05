@@ -33,17 +33,17 @@ def SongSave(songUrl, path, SongName):
 
 
   
-  yt = YouTube(songUrl)
-  vids= yt.streams.all()
-  for i in range(len(vids)):
-      print(i,'. ',vids[i])
+  # yt = YouTube(songUrl)
+  # vids= yt.streams.all()
+  # for i in range(len(vids)):
+  #     print(i,'. ',vids[i])
 
-  num = int(input("enter num: "))
-  vids[num].download()
-  print('done')
+  # num = int(input("enter num: "))
+  # vids[num].download()
+  # print('done')
 
-  # try:
-  #   YouTube(songUrl).streams.get_audio_only("mp4").download(filename= SongName + ".mp3")
-  #   print("The video is downloaded in MP3")
-  # except KeyError:
-  #   print("Unable to fetch video information. Please check the video URL or your network connection.")
+  try:
+    YouTube(songUrl).streams.get_audio_only("mp4").download(filename= SongName + ".mp3")
+    print("The video is downloaded in MP3")
+  except KeyError:
+    print("Unable to fetch video information. Please check the video URL or your network connection.")

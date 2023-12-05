@@ -94,10 +94,9 @@ def downloadPlayList(playList, errorLimit):
       songUrl = YoutubeSearch(songName.strip().replace(" ", "+"))
       for i in range(errorLimit):
         if len(songUrl) < 1:
-          songUrl = YoutubeSearch(songName.strip().replace(" ", "+")) 
+          songUrl = YoutubeSearch(songName.strip().replace(" ", "+"))
           print(i)
-        else: break
-      SongSave(songUrl[0], path, songName,)
+        else: SongSave(songUrl[0], path, songName); break
 
 def downloadSong(errorLimit): 
   path = f"./song"
@@ -108,8 +107,7 @@ def downloadSong(errorLimit):
     if len(songUrl) < 1:
       songUrl = YoutubeSearch(songName.strip().replace(" ", "+"))
       print(i)
-    else: break
-  SongSave(songUrl[0], path, songName)
+    else: SongSave(songUrl[0], path, songName); break
 
 def createPlayList():
   os.system("clear")
@@ -184,8 +182,8 @@ def main():
   token = getToken()
   # PLAYLISTNAME = createPlayList()
   # csvSave(PLAYLISTNAME, token)
-  # downloadPlayList(PLAYLISTNAME)
-  downloadSong(ERROR_LIMIT)
+  downloadPlayList(PLAYLISTNAME, ERROR_LIMIT)
+  # downloadSong(ERROR_LIMIT)
   # pprint.pprint(shuffle())
   # keyward = "taking whats not yours".strip().replace(" ", "+")
   # pprint.pprint(YoutubeSearch(keyward)[0])
