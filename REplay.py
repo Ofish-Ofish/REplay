@@ -11,6 +11,7 @@ from multiprocessing import Process
 import csv
 import random
 import time
+from collections import defaultdict 
 
 PLAYLISTNAME = "classical"
 ERROR_LIMIT = 20
@@ -150,31 +151,69 @@ def csvSave(playlist, token):
 def stringToVec(string):
   return np.vectorize(float)([x for x in string[1:-1].split(" ") if x != ''])
 
-def shuffle():
-  os.chdir("./playList")
-  # save csv as a modifable list of dics
-  dictList = []
+def albumsList():
+  os.chdir(f"./playList/{PLAYLISTNAME}")
+  songList = []
+  albums = []
   with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
     dictList = [row for row in csv.DictReader(csvfile, delimiter=',', quotechar='|')]
   
-  # choose random song and remove all songs witht he same albumid
-  randomSongDict = random.choice(dictList)
-  to_remove = [x for x in reversed(range(len(dictList)-1)) if dictList[x]['Albumid'] == randomSongDict["Albumid"]]
-  for index in reversed(to_remove):
-    dictList.pop(index)
+  for row in dictList:
+    if row["Albumid"] in albums:
+      continue
+    else:
+      albums.append(row["Albumid"])
 
-  # get a list of all crosses
-  crosses = np.array([])
-  for i in range(len(dictList) - 1):
-    dictList[i]["cross"] = similarity(stringToVec(randomSongDict['vector']), stringToVec(dictList[i]['vector']))
-    crosses = np.append(crosses,dictList[i]["cross"])
+
+  for album in albums:
+    albumList = []
+    for row in dictList:
+      if row["Albumid"] == album:
+        print(row)
+        albumList.append(row)
+        print(albumList)
+
+    songList.append(albumList)
   
-  # return 10 songs. the first song being the random one picked at the start; the rest of the songs are the 9 most siliar songs shuffled
-  crosses = np.argsort(crosses)[:9]
-  shuffleSongList = [dictList[i]["songName"] for i in crosses]
-  random.shuffle(shuffleSongList)
-  shuffleSongList = [randomSongDict['songName']] + shuffleSongList
-  return shuffleSongList
+  return songList
+
+    
+
+
+
+
+  
+  
+
+
+
+
+
+
+  # os.chdir("./playList")
+  # # save csv as a modifable list of dics
+  # dictList = []
+  # with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
+  #   dictList = [row for row in csv.DictReader(csvfile, delimiter=',', quotechar='|')]
+  
+  # # choose random song and remove all songs with the same albumid
+  # randomSongDict = random.choice(dictList)
+  # to_remove = [x for x in reversed(range(len(dictList)-1)) if dictList[x]['Albumid'] == randomSongDict["Albumid"]]
+  # for index in reversed(to_remove):
+  #   dictList.pop(index)
+
+  # # get a list of all crosses
+  # crosses = np.array([])
+  # for i in range(len(dictList) - 1):
+  #   dictList[i]["cross"] = similarity(stringToVec(randomSongDict['vector']), stringToVec(dictList[i]['vector']))
+  #   crosses = np.append(crosses,dictList[i]["cross"])
+  
+  # # return 10 songs. the first song being the random one picked at the start; the rest of the songs are the 9 most siliar songs shuffled
+  # crosses = np.argsort(crosses)[:9]
+  # shuffleSongList = [dictList[i]["songName"] for i in crosses]
+  # random.shuffle(shuffleSongList)
+  # shuffleSongList = [randomSongDict['songName']] + shuffleSongList
+  # return shuffleSongList
 
 def main():
   os.system("clear")  
@@ -183,7 +222,8 @@ def main():
   # PLAYLISTNAME = createPlayList()
   # csvSave(PLAYLISTNAME, token)
   # downloadPlayList(PLAYLISTNAME, ERROR_LIMIT)
-  downloadSong(ERROR_LIMIT)
+  # downloadSong(ERROR_LIMIT)
+  pprint.pprint(albumsList())
   # pprint.pprint(shuffle())
   # keyward = "taking whats not yours".strip().replace(" ", "+")
   # pprint.pprint(YoutubeSearch(keyward)[0])
