@@ -157,36 +157,26 @@ def albumsList():
   albums = []
   with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
     dictList = [row for row in csv.DictReader(csvfile, delimiter=',', quotechar='|')]
-  
+
   for row in dictList:
     if row["Albumid"] in albums:
       continue
     else:
       albums.append(row["Albumid"])
 
-
   for album in albums:
     albumList = []
     for row in dictList:
       if row["Albumid"] == album:
-        print(row)
         albumList.append(row)
-        print(albumList)
-
     songList.append(albumList)
   
   return songList
 
-    
-
-
-
-
-  
-  
-
-
-
+def shuffle():
+  songList = albumsList()
+  randomSongDict = random.choice(songList)
+  return randomSongDict
 
 
 
@@ -223,8 +213,7 @@ def main():
   # csvSave(PLAYLISTNAME, token)
   # downloadPlayList(PLAYLISTNAME, ERROR_LIMIT)
   # downloadSong(ERROR_LIMIT)
-  pprint.pprint(albumsList())
-  # pprint.pprint(shuffle())
+  pprint.pprint(shuffle())
   # keyward = "taking whats not yours".strip().replace(" ", "+")
   # pprint.pprint(YoutubeSearch(keyward)[0])
 
