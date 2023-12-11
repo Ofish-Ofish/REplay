@@ -83,7 +83,7 @@ def vectorNormalizer(threeitmeList):
   
 def similarity(cs,s):
   v = np.cross(cs, s)
-  return np.sqrt(np.sum(v**2)) * 1000
+  return np.sqrt(np.sum(v**2)) 
 
 def downloadPlayList(playList, errorLimit): 
   path = f"./playList/{playList}"
@@ -151,59 +151,27 @@ def csvSave(playlist, token):
 def stringToVec(string):
   return np.vectorize(float)([x for x in string[1:-1].split(" ") if x != ''])
 
-def albumsList():
+def shuffle(randomSongs):
   os.chdir(f"./playList/{PLAYLISTNAME}")
-  songList = []
-  albums = []
   with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
     dictList = [row for row in csv.DictReader(csvfile, delimiter=',', quotechar='|')]
+    randomSongDict = random.choice(dictList)
+    while randomSongDict in randomSongs[-10:]:
+      randomSongDict = random.choice(dictList)
 
-  for row in dictList:
-    if row["Albumid"] in albums:
-      continue
-    else:
-      albums.append(row["Albumid"])
+  for i in range(len(dictList)):
+    dictList[i]["cross"] = similarity(stringToVec(randomSongDict['vector']), stringToVec(dictList[i]['vector']))
 
-  for album in albums:
-    albumList = []
-    for row in dictList:
-      if row["Albumid"] == album:
-        albumList.append(row)
-    songList.append(albumList)
-  
-  return songList
+  dictList = sorted(dictList, key=lambda d: d['cross'])
+  uniquealb = []
+  uniquealbSongs = []
+  for i in range(1, len(dictList)):
+    if dictList[i]["Albumid"] not in uniquealb:
+      uniquealb += [dictList[i]["Albumid"]]
+      uniquealbSongs.append(dictList[i])
 
-def shuffle():
-  songList = albumsList()
-  randomSongDict = random.choice(songList)
-  return randomSongDict
-
-
-
-  # os.chdir("./playList")
-  # # save csv as a modifable list of dics
-  # dictList = []
-  # with open(f'{PLAYLISTNAME}.csv', newline='', encoding='utf-8') as csvfile:
-  #   dictList = [row for row in csv.DictReader(csvfile, delimiter=',', quotechar='|')]
-  
-  # # choose random song and remove all songs with the same albumid
-  # randomSongDict = random.choice(dictList)
-  # to_remove = [x for x in reversed(range(len(dictList)-1)) if dictList[x]['Albumid'] == randomSongDict["Albumid"]]
-  # for index in reversed(to_remove):
-  #   dictList.pop(index)
-
-  # # get a list of all crosses
-  # crosses = np.array([])
-  # for i in range(len(dictList) - 1):
-  #   dictList[i]["cross"] = similarity(stringToVec(randomSongDict['vector']), stringToVec(dictList[i]['vector']))
-  #   crosses = np.append(crosses,dictList[i]["cross"])
-  
-  # # return 10 songs. the first song being the random one picked at the start; the rest of the songs are the 9 most siliar songs shuffled
-  # crosses = np.argsort(crosses)[:9]
-  # shuffleSongList = [dictList[i]["songName"] for i in crosses]
-  # random.shuffle(shuffleSongList)
-  # shuffleSongList = [randomSongDict['songName']] + shuffleSongList
-  # return shuffleSongList
+  shuffleSongList = [randomSongDict['songName']] + [uniquealbSongs[i]["songName"] for i in range(9)]
+  return shuffleSongList, randomSongDict
 
 def main():
   os.system("clear")  
@@ -211,11 +179,12 @@ def main():
   token = getToken()
   # PLAYLISTNAME = createPlayList()
   # csvSave(PLAYLISTNAME, token)
+  randomsongs = []
+  shuffleSongList, randomSong = shuffle(randomsongs)
+  pprint.pprint(shuffleSongList)
+  randomsongs.append(randomSong)
   # downloadPlayList(PLAYLISTNAME, ERROR_LIMIT)
   # downloadSong(ERROR_LIMIT)
-  pprint.pprint(shuffle())
-  # keyward = "taking whats not yours".strip().replace(" ", "+")
-  # pprint.pprint(YoutubeSearch(keyward)[0])
 
 if __name__ == '__main__':
   main()
