@@ -179,16 +179,16 @@ def main():
   token = getToken()
   # PLAYLISTNAME = createPlayList()
   # csvSave(PLAYLISTNAME, token)
-  randomsongs = []
-  shuffledSongList, randomSong = shuffle(randomsongs)
-  randomsongs.append(randomSong)
-  print(shuffledSongList[0])
-  print(os.getcwd())
-  winsound.PlaySound(f"The_Swan.wav", winsound.SND_ASYNC + winsound.SND_LOOP)
-  input("weeee")
+  # randomsongs = []
+  # shuffledSongList, randomSong = shuffle(randomsongs)
+  # randomsongs.append(randomSong)
+  # print(shuffledSongList[0])
+  # print(os.getcwd())
+  # winsound.PlaySound(f"The_Swan.wav", winsound.SND_ASYNC + winsound.SND_LOOP)
+  # input("weeee")
   
   # downloadPlayList(PLAYLISTNAME, ERROR_LIMIT)
-  # downloadSong(ERROR_LIMIT)
+  downloadSong(ERROR_LIMIT)
 
 if __name__ == '__main__':
   main()

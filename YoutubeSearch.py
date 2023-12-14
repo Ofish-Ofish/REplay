@@ -7,6 +7,7 @@ import urllib.request
 import re
 from bs4 import BeautifulSoup
 import json
+import subprocess
 
 load_dotenv()
 
@@ -32,6 +33,10 @@ def YoutubeSearch(searchKeyword):
 def SongSave(songUrl, path, SongName):
   try:
     YouTube(songUrl).streams.get_audio_only("mp4").download(filename= SongName + ".mp3")
+    subprocess.call(['ffmpeg', '-i', f'{SongName}.mp3',
+                   'audio.wav'])
+
+
     print("The video is downloaded in MP3")
   except KeyError:
     print("Unable to fetch video information. Please check the video URL or your network connection.")
