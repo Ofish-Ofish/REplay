@@ -11,8 +11,7 @@ from multiprocessing import Process
 import csv
 import random
 import time
-from pydub import AudioSegment
-from pydub.playback import play
+import winsound
 
 PLAYLISTNAME = "classical"
 ERROR_LIMIT = 20
@@ -185,8 +184,9 @@ def main():
   randomsongs.append(randomSong)
   print(shuffledSongList[0])
   print(os.getcwd())
-  song = AudioSegment.from_mp3("The_Swan.mp3")
-  play(song)
+  winsound.PlaySound(f"The_Swan.wav", winsound.SND_ASYNC + winsound.SND_LOOP)
+  input("weeee")
+  
   # downloadPlayList(PLAYLISTNAME, ERROR_LIMIT)
   # downloadSong(ERROR_LIMIT)
 
