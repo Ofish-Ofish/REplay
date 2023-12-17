@@ -34,7 +34,8 @@ def SongSave(songUrl, path, SongName):
   try:
     YouTube(songUrl).streams.get_audio_only("mp4").download(filename= SongName + ".mp3")
     subprocess.call(['ffmpeg', '-i', f'{SongName}.mp3',
-                   'audio.wav'])
+                   f'{SongName}.wav'])
+    os.remove(f'{SongName}.mp3')
 
 
     print("The video is downloaded in MP3")

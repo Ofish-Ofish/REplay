@@ -11,7 +11,7 @@ from multiprocessing import Process
 import csv
 import random
 import time
-import winsound
+import pygame
 
 PLAYLISTNAME = "classical"
 ERROR_LIMIT = 20
@@ -179,16 +179,19 @@ def main():
   token = getToken()
   # PLAYLISTNAME = createPlayList()
   # csvSave(PLAYLISTNAME, token)
+  # downloadPlayList(PLAYLISTNAME, ERROR_LIMIT)
   # randomsongs = []
   # shuffledSongList, randomSong = shuffle(randomsongs)
   # randomsongs.append(randomSong)
   # print(shuffledSongList[0])
-  # print(os.getcwd())
-  # winsound.PlaySound(f"The_Swan.wav", winsound.SND_ASYNC + winsound.SND_LOOP)
-  # input("weeee")
-  
-  # downloadPlayList(PLAYLISTNAME, ERROR_LIMIT)
-  downloadSong(ERROR_LIMIT)
+  pygame.mixer.init() 
+  pygame.mixer.music.load(f"C:\\Users\\Ofish\\Documents\\GitHub\\REplay\\playList\\classical\\Chopin (Etude Op 25 No 9 )Butterfly.wav") 
+  pygame.mixer.music.set_volume(0.7) 
+  pygame.mixer.music.play() 
+
+  while pygame.mixer.music.get_busy() == True:
+    continue
+  # downloadSong(ERROR_LIMIT)
 
 if __name__ == '__main__':
   main()
