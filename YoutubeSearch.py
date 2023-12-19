@@ -38,6 +38,6 @@ def SongSave(songUrl, path, SongName):
     os.remove(f'{SongName}.mp3')
 
 
-    print("The video is downloaded in MP3")
+    print("The video is downloaded in wav")
   except KeyError:
     print("Unable to fetch video information. Please check the video URL or your network connection.")
