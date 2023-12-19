@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 import numpy as np
-import base64
+import base64   
 from requests import post, get
 import json
 import pprint as pprint
@@ -12,6 +12,43 @@ import csv
 import random
 import time
 import pygame
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+import sys
+
+
+class MyWindow(QMainWindow):
+  def __init__(self):
+    super(MyWindow,self).__init__()
+    self.initUI()
+    
+  def button_clicked(self):
+    self.label.setText("you pressed the button")
+    pygame.mixer.init() 
+    pygame.mixer.music.load(f"C:\\Users\\Ofish\\Documents\\GitHub\\REplay\\playList\\classical\\Chopin (Etude Op 25 No 9 )Butterfly.wav") 
+    pygame.mixer.music.set_volume(0.7) 
+    pygame.mixer.music.play() 
+    self.update()
+    
+  def initUI(self):
+    self.setGeometry(0,0,self.screen().size().width(),self.screen().size().height())
+    self.setWindowTitle("REplay")
+    # self.setStyleSheet("background-color: black;")
+    self.label = QtWidgets.QLabel(self)
+    # self.label.setStyleSheet("color: white;")
+    self.label.setText("my first label!")
+    self.label.move(50,50)
+    
+    self.b1 = QtWidgets.QPushButton(self)
+    self.b1.setText("cplay music")
+    self.b1.clicked.connect(self.button_clicked)
+
+  def update(self):
+    self.label.adjustSize()
+
+  
+  
+
 
 PLAYLISTNAME = "classical"
 ERROR_LIMIT = 20
@@ -173,6 +210,12 @@ def shuffle(randomSongs):
   shuffleSongList = [randomSongDict['songName']] + [uniquealbSongs[i]["songName"] for i in range(9)]
   return shuffleSongList, randomSongDict
 
+def window():
+    app = QApplication(sys.argv)
+    win = MyWindow()
+    win.show()
+    sys.exit(app.exec_())
+
 def main():
   os.system("clear")  
   os.chdir(".")
@@ -184,14 +227,17 @@ def main():
   # shuffledSongList, randomSong = shuffle(randomsongs)
   # randomsongs.append(randomSong)
   # print(shuffledSongList[0])
-  pygame.mixer.init() 
-  pygame.mixer.music.load(f"C:\\Users\\Ofish\\Documents\\GitHub\\REplay\\playList\\classical\\Chopin (Etude Op 25 No 9 )Butterfly.wav") 
-  pygame.mixer.music.set_volume(0.7) 
-  pygame.mixer.music.play() 
-
-  while pygame.mixer.music.get_busy() == True:
-    continue
+  # pygame.mixer.init() 
+  # pygame.mixer.music.load(f"C:\\Users\\Ofish\\Documents\\GitHub\\REplay\\playList\\classical\\Chopin (Etude Op 25 No 9 )Butterfly.wav") 
+  # pygame.mixer.music.set_volume(0.7) 
+  # pygame.mixer.music.play() 
+  # while pygame.mixer.music.get_busy() == True:
+  #   continue
   # downloadSong(ERROR_LIMIT)
+
+  window()
+
+
 
 if __name__ == '__main__':
   main()
