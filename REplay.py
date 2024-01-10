@@ -12,8 +12,8 @@ import csv
 import random
 import time
 import pygame
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt6 import QtWidgets
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel
 import sys
 
 
@@ -214,7 +214,7 @@ def window():
     app = QApplication(sys.argv)
     win = MyWindow()
     win.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 def main():
   os.system("clear")  
