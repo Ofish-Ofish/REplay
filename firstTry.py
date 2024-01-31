@@ -8,8 +8,9 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+
 class Ui_Playlist(object):
-    def setupUi(self, Form):
+    def setupUi(self, Form, *argv):
         self.PlaylistWidget = QtWidgets.QFrame(parent=Form)
         self.PlaylistWidget.setGeometry(QtCore.QRect(0, 240, 762, 100))
         self.PlaylistWidget.setMaximumSize(QtCore.QSize(16777215, 128))
@@ -84,15 +85,16 @@ class Ui_Playlist(object):
         self.verticalLayout_6.addWidget(self.label_3)
         self.horizontalLayout_4.addWidget(self.songNum1)
 
-        self.retranslateUi(Form)
+        self.retranslateUi(Form,*argv)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-    def retranslateUi(self, Form):
+        return self.PlaylistWidget
+
+    def retranslateUi(self, Form, *argv):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.label_4.setText(_translate("Form", "Playlist name"))
-        self.label_5.setText(_translate("Form", "Artist"))
-        self.label_6.setText(_translate("Form", "##### Songs"))
+        self.label_4.setText(_translate("Form", argv[0]))
+        self.label_5.setText(_translate("Form", argv[1]))
+        self.label_6.setText(_translate("Form", f"{argv[2]} songs"))
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -158,7 +160,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setObjectName("verticalLayout_4")
 
 
-        self.PlaylistWidget2 = Ui_Playlist().setupUi(self.Playlists)
+        self.PlaylistWidget2 = Ui_Playlist().setupUi(self.Playlists, "bagget","fish", "999")
+        print(self.PlaylistWidget2)
 
         self.PlaylistWidget = QtWidgets.QFrame(parent=self.Playlists)
         self.PlaylistWidget.setMaximumSize(QtCore.QSize(16777215, 100))
@@ -232,7 +235,11 @@ class Ui_MainWindow(object):
         self.label_3.setObjectName("label_3")
         self.verticalLayout_6.addWidget(self.label_3)
         self.horizontalLayout_4.addWidget(self.songNum1)
+
         self.verticalLayout_4.addWidget(self.PlaylistWidget)
+        self.verticalLayout_4.addWidget(self.PlaylistWidget2)
+
+
         self.verticalLayout.addWidget(self.Playlists)
         self.navbar = QtWidgets.QFrame(parent=self.centralwidget)
         self.navbar.setMinimumSize(QtCore.QSize(0, 0))
@@ -299,7 +306,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.YourLibrarylabel.setText(_translate("MainWindow", "Your LIbrary"))
+        self.YourLibrarylabel.setText(_translate("MainWindow", "Your Library"))
         self.label_4.setText(_translate("MainWindow", "Playlist name"))
         self.label_5.setText(_translate("MainWindow", "Artist"))
         self.label_6.setText(_translate("MainWindow", "##### Songs"))
