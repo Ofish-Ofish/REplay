@@ -8,15 +8,42 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+def Frame(parent, **kwargs):
+    frame = QtWidgets.QFrame(parent=parent)
+    for key, value in kwargs.items():
+        if  key == "Geometry":
+            frame.setGeometry(value)
+        elif  key == "MaxSize":
+            frame.setMaximumSize(value)
+        elif  key == "MinSize":
+            frame.setMinimumSize(value)
+        elif  key == "frameShape":
+            frame.setFrameShape(value)
+        elif  key == "frameShadow":
+            frame.setFrameShadow(value)
+        elif  key == "name":
+            frame.setObjectName(value)
+    return frame
 
 class Ui_Playlist(object):
+
     def setupUi(self, Form, *argv):
-        self.PlaylistWidget = QtWidgets.QFrame(parent=Form)
-        self.PlaylistWidget.setGeometry(QtCore.QRect(0, 240, 762, 100))
-        self.PlaylistWidget.setMaximumSize(QtCore.QSize(16777215, 128))
-        self.PlaylistWidget.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.PlaylistWidget.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.PlaylistWidget.setObjectName("PlaylistWidget")
+        self.PlayListWidget = Frame(
+            Form,
+            Geometry=QtCore.QRect(0, 240, 762, 100),
+            MaxSize=QtCore.QSize(16777215, 128),
+            frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+            frameShadow=QtWidgets.QFrame.Shadow.Raised,
+            name="PlaylistWidget",
+        )
+        print(self.PlayListWidget)
+
+        # self.PlaylistWidget = QtWidgets.QFrame(parent=Form)
+        # self.PlaylistWidget.setGeometry(QtCore.QRect(0, 240, 762, 100))
+        # self.PlaylistWidget.setMaximumSize(QtCore.QSize(16777215, 128))
+        # self.PlaylistWidget.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        # self.PlaylistWidget.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        # self.PlaylistWidget.setObjectName("PlaylistWidget")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.PlaylistWidget)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.framePic = QtWidgets.QFrame(parent=self.PlaylistWidget)
@@ -161,7 +188,6 @@ class Ui_MainWindow(object):
 
 
         self.PlaylistWidget2 = Ui_Playlist().setupUi(self.Playlists, "bagget","fish", "999")
-        print(self.PlaylistWidget2)
 
         self.PlaylistWidget = QtWidgets.QFrame(parent=self.Playlists)
         self.PlaylistWidget.setMaximumSize(QtCore.QSize(16777215, 100))
