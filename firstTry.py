@@ -28,7 +28,7 @@ def Frame(parent, **kwargs):
 class Ui_Playlist(object):
 
     def setupUi(self, Form, *argv):
-        self.PlayListWidget = Frame(
+        self.PlaylistWidget = Frame(
             Form,
             Geometry=QtCore.QRect(0, 240, 762, 100),
             MaxSize=QtCore.QSize(16777215, 128),
@@ -36,7 +36,7 @@ class Ui_Playlist(object):
             frameShadow=QtWidgets.QFrame.Shadow.Raised,
             name="PlaylistWidget",
         )
-        print(self.PlayListWidget)
+        print(self.PlaylistWidget)
 
         # self.PlaylistWidget = QtWidgets.QFrame(parent=Form)
         # self.PlaylistWidget.setGeometry(QtCore.QRect(0, 240, 762, 100))
