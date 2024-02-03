@@ -25,103 +25,107 @@ def Frame(parent, **kwargs):
             frame.setObjectName(value)
     return frame
 
+def VecticalLayout(parent, **kwargs):
+    layout = QtWidgets.QVBoxLayout(parent)
+    for key, value in kwargs.items():
+        if key == "name":
+            layout.setObjectName(value)
+    return layout
+
+def horizontalLayout(parent, **kwargs):
+    layout = QtWidgets.QHBoxLayout(parent)
+    for key, value in kwargs.items():
+        if key == "name":
+            layout.setObjectName(value)
+    return layout
+
+def Label(parent1, **kwargs):
+    label = QtWidgets.QLabel(parent=parent1)
+    for key, value in kwargs.items():
+        if  key == "Geometry":
+            label.setGeometry(value)
+        elif  key == "MaxSize":
+            label.setMaximumSize(value)
+        elif  key == "MinSize":
+            label.setMinimumSize(value)
+        elif key == "Text":
+            label.setText(value)
+        elif key == "Pic":
+            label.setPixmap(value)
+        elif key == "Scaling":
+            label.setScaledContents(value)
+        elif key == "name":
+            label.setObjectName(value)
+        elif key == "Font":
+            label.setFont(value)
+        elif key == "Color":
+            label.setStyleSheet(value)
+
+
+    return label
+
+def Font(**kwargs):
+    font = QtGui.QFont()
+    for key, value in kwargs.items():
+        if  key == "Family":
+            font.setFamily(value)
+        elif  key == "Point":
+            font.setPointSize(value)
+
+    return font
+
+
+
 class Ui_Playlist(object):
-
     def setupUi(self, Form, *argv):
-        self.PlaylistWidget = Frame(
-            Form,
-            Geometry=QtCore.QRect(0, 240, 762, 100),
-            MaxSize=QtCore.QSize(16777215, 128),
-            frameShape=QtWidgets.QFrame.Shape.StyledPanel,
-            frameShadow=QtWidgets.QFrame.Shadow.Raised,
-            name="PlaylistWidget",
-        )
-        print(self.PlaylistWidget)
-
-        # self.PlaylistWidget = QtWidgets.QFrame(parent=Form)
-        # self.PlaylistWidget.setGeometry(QtCore.QRect(0, 240, 762, 100))
-        # self.PlaylistWidget.setMaximumSize(QtCore.QSize(16777215, 128))
-        # self.PlaylistWidget.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        # self.PlaylistWidget.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        # self.PlaylistWidget.setObjectName("PlaylistWidget")
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.PlaylistWidget)
-        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.framePic = QtWidgets.QFrame(parent=self.PlaylistWidget)
-        self.framePic.setMaximumSize(QtCore.QSize(80, 80))
-        self.framePic.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.framePic.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.framePic.setObjectName("framePic")
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.framePic)
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.pic1 = QtWidgets.QLabel(parent=self.framePic)
-        self.pic1.setMaximumSize(QtCore.QSize(64, 64))
-        self.pic1.setText("")
-        self.pic1.setPixmap(QtGui.QPixmap("images/deafult Playlist pic.png"))
-        self.pic1.setScaledContents(True)
-        self.pic1.setObjectName("pic1")
+        self.playlistWidget = Frame(Form, Geometry=QtCore.QRect(0, 240, 762, 100), MaxSize=QtCore.QSize(16777215, 128), frameShape=QtWidgets.QFrame.Shape.StyledPanel, frameShadow=QtWidgets.QFrame.Shadow.Raised, name="playlistWidget",)
+        self.horizontalLayout_4 = horizontalLayout(self.playlistWidget, name="horizontalLayout_4")
+        self.framePic = Frame(self.playlistWidget, MaxSize=QtCore.QSize(80, 80), frameShape=QtWidgets.QFrame.Shape.StyledPanel, frameShadow=QtWidgets.QFrame.Shadow.Raised, name="framePic")
+        self.horizontalLayout_5 = horizontalLayout(self.framePic, name="horizontalLayout_5")
+        self.pic1 = Label(self.framePic, MaxSize=QtCore.QSize(64, 64), Text="", Pic=QtGui.QPixmap("images/deafult Playlist pic.png"), Scaling=True, name="pic1")
+        
         self.horizontalLayout_5.addWidget(self.pic1)
         self.horizontalLayout_4.addWidget(self.framePic)
-        self.frame_4 = QtWidgets.QFrame(parent=self.PlaylistWidget)
-        self.frame_4.setMaximumSize(QtCore.QSize(16777215, 80))
-        self.frame_4.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_4.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_4.setObjectName("frame_4")
-        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.frame_4)
-        self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.label_4 = QtWidgets.QLabel(parent=self.frame_4)
-        self.label_4.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_4.setMaximumSize(QtCore.QSize(16777215, 50))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        font.setPointSize(16)
-        self.label_4.setFont(font)
-        self.label_4.setStyleSheet("color: rgb(202, 202, 202);")
-        self.label_4.setObjectName("label_4")
+
+        self.frame_4 = Frame(self.playlistWidget, MaxSize=QtCore.QSize(16777215, 80), frameShape=QtWidgets.QFrame.Shape.StyledPanel, frameShadow=QtWidgets.QFrame.Shadow.Raised, name="frame_4")
+        self.verticalLayout_5 = VecticalLayout(self.frame_4, name="verticalLayout_5")
+        Georgia16 = Font(Family="Georgia", Point=16)
+        self.label_4 = Label(self.frame_4, MinSize=QtCore.QSize(0, 0,), MaxSize=QtCore.QSize(16777215, 50), Font=Georgia16, Color="color: rgb(202, 202, 202);", name="label_4")
+
         self.verticalLayout_5.addWidget(self.label_4)
-        self.label_5 = QtWidgets.QLabel(parent=self.frame_4)
-        self.label_5.setMaximumSize(QtCore.QSize(16777215, 50))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        font.setPointSize(12)
-        self.label_5.setFont(font)
-        self.label_5.setStyleSheet("color: rgb(202, 202, 202);")
-        self.label_5.setObjectName("label_5")
+
+        Georgia12 = Font(Family="Georgia", Point=12)
+        self.label_5 = Label(self.frame_4, MaxSize=QtCore.QSize(16777215, 50), Font=Georgia12, Color="color: rgb(202, 202, 202);", name="label_5")
+        
         self.verticalLayout_5.addWidget(self.label_5)
         self.horizontalLayout_4.addWidget(self.frame_4)
-        self.songNum1 = QtWidgets.QFrame(parent=self.PlaylistWidget)
-        self.songNum1.setMinimumSize(QtCore.QSize(120, 0))
-        self.songNum1.setMaximumSize(QtCore.QSize(100, 80))
-        self.songNum1.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.songNum1.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.songNum1.setObjectName("songNum1")
-        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.songNum1)
-        self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.label_6 = QtWidgets.QLabel(parent=self.songNum1)
-        self.label_6.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_6.setMaximumSize(QtCore.QSize(200, 16777215))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        font.setPointSize(12)
-        self.label_6.setFont(font)
-        self.label_6.setStyleSheet("color: rgb(202, 202, 202);")
-        self.label_6.setObjectName("label_6")
+
+        self.songNum1 = Frame(self.playlistWidget, MinSize=QtCore.QSize(120, 0), MaxSize=QtCore.QSize(100, 80), frameShape=QtWidgets.QFrame.Shape.StyledPanel, frameShadow=QtWidgets.QFrame.Shadow.Raised, name="songNum1")
+
+        self.verticalLayout_6 = VecticalLayout(self.songNum1, name="verticalLayout_6")
+        self.label_6 = Label(self.songNum1, MinSize=QtCore.QSize(0, 0), MaxSize=QtCore.QSize(200, 16777215), Font=Georgia12, Color="color: rgb(202, 202, 202);", name="label_6")
+
         self.verticalLayout_6.addWidget(self.label_6)
-        self.label_3 = QtWidgets.QLabel(parent=self.songNum1)
-        self.label_3.setText("")
-        self.label_3.setObjectName("label_3")
+
+        self.label_3 = Label(self.songNum1, Text="", name="label_3")
+
         self.verticalLayout_6.addWidget(self.label_3)
         self.horizontalLayout_4.addWidget(self.songNum1)
 
         self.retranslateUi(Form,*argv)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-        return self.PlaylistWidget
+        return self.playlistWidget
 
     def retranslateUi(self, Form, *argv):
         _translate = QtCore.QCoreApplication.translate
         self.label_4.setText(_translate("Form", argv[0]))
         self.label_5.setText(_translate("Form", argv[1]))
         self.label_6.setText(_translate("Form", f"{argv[2]} songs"))
+
+
+
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
