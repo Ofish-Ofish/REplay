@@ -7,6 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+import os
 
 def Frame(parent, **kwargs):
     frame = QtWidgets.QFrame(parent=parent)
@@ -188,11 +189,21 @@ class Ui_PlaylistHolder(object):
                                               name="PlaylistsLayout"
                             )
         
-        #creating playListWigit
-        self.PlaylistWidget = Ui_Playlist().setupUi(self.Playlists, "bagget","fish", "999")
-
-        #adding toghether
-        self.PlaylistsLayout.addWidget(self.PlaylistWidget)
+        files = os.listdir("./playList")
+        for i in range(len(files)):
+            os.chdir(f"./playList/{files[i]}")
+            txtfile = open(f"{files[i]}.txt","r")
+            
+            playlist = Ui_Playlist().setupUi(self.Playlists,
+                                             f"playList/{files[i]}/{files[i]}.jpg",
+                                             txtfile.readline().replace("_", " ").replace("\n",""),
+                                             txtfile.readline().replace("_", " ").replace("\n",""),
+                                             txtfile.readline().replace("_", " ").replace("\n",""))
+            self.PlaylistsLayout.addWidget(playlist)
+        # #creating playListWigit
+        # self.PlaylistWidget = Ui_Playlist().setupUi(self.Playlists, "bagget","fish", "999")
+        # #adding toghether
+        # self.PlaylistsLayout.addWidget(self.PlaylistWidget)
 
 
         self.retranslateUi(Form)
@@ -206,6 +217,8 @@ class Ui_PlaylistHolder(object):
 
 class Ui_Playlist(object):
     def setupUi(self, Form, *argv):
+        os.chdir("..")
+        os.chdir("..")
         #fonts
         GEORGIA16 = Font(Family="Georgia", Point=16)
         GEORGIA12 = Font(Family="Georgia", Point=12)
@@ -233,7 +246,7 @@ class Ui_Playlist(object):
         self.playlistPic = Label(self.framePic,
                                  MaxSize=QtCore.QSize(64, 64),
                                  Text="",
-                                 Pic=QtGui.QPixmap("images/deafult Playlist pic.png"),
+                                 Pic=QtGui.QPixmap(argv[0]),
                                  Scaling=True,
                                  name="playlistPic",
                             )
@@ -298,9 +311,9 @@ class Ui_Playlist(object):
 
     def retranslateUi(self, Form, *argv):
         _translate = QtCore.QCoreApplication.translate
-        self.playListName.setText(_translate("Form", argv[0]))
-        self.artist.setText(_translate("Form", argv[1]))
-        self.songNum.setText(_translate("Form", f"{argv[2]} songs"))
+        self.playListName.setText(_translate("Form", argv[1]))
+        self.artist.setText(_translate("Form", argv[2]))
+        self.songNum.setText(_translate("Form", f"{argv[3]} songs"))
 
 class Ui_Footer(object):
 

@@ -171,10 +171,25 @@ def formatData(item, playlist, token):
   data.append(vectorNormalizer([data[4], data[12], data[13]]))
   return data
 
-def csvSave(playlist, token):
+def PlaylistSaveSpotify(token):
   os.system("clear")
   os.chdir(f".")
   playlistRaw = getPlaylist(token, getPlayListID())
+  playlist = playlistRaw["name"]
+  playlist = playlist.replace(" ", "_")
+  path = "./playList/"
+
+  isExsist = os.path.exists(path)
+  if not isExsist:
+    os.makedirs("playList")
+  os.chdir(path)
+  os.makedirs(playlist)
+  os.chdir(playlist)
+
+  img_data = get(playlistRaw["images"][0]["url"]).content
+  with open(f'{playlist}.jpg', 'wb') as handler:
+      handler.write(img_data)
+
   with open(f"{playlist}.csv",'w',newline='', encoding='utf-8') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
@@ -184,6 +199,14 @@ def csvSave(playlist, token):
       print("start of write",time.time())
       writer.writerow(data)
       print("end of write",time.time())
+
+    txtfile = open(f'{playlist}.txt', 'w')
+    txtfile.write(f"{playlist}\n")
+    txtfile.write(f"{playlistRaw['owner']['display_name']}\n")
+    txtfile.write(f"{str(len(playlistRaw['tracks']['items']))}\n")
+    txtfile.close()
+
+    
 
 def stringToVec(string):
   return np.vectorize(float)([x for x in string[1:-1].split(" ") if x != ''])
@@ -221,7 +244,7 @@ def main():
   os.chdir(".")
   token = getToken()
   # PLAYLISTNAME = createPlayList()
-  # csvSave(PLAYLISTNAME, token)
+  PlaylistSaveSpotify(token)
   # downloadPlayList(PLAYLISTNAME, ERROR_LIMIT)
   # randomsongs = []
   # shuffledSongList, randomSong = shuffle(randomsongs)
@@ -235,7 +258,7 @@ def main():
   #   continue
   # downloadSong(ERROR_LIMIT)
 
-  window()
+  # window()
 
 
 
