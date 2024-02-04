@@ -11,18 +11,20 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 def Frame(parent, **kwargs):
     frame = QtWidgets.QFrame(parent=parent)
     for key, value in kwargs.items():
-        if  key == "Geometry":
+        if key == "Geometry":
             frame.setGeometry(value)
-        elif  key == "MaxSize":
+        elif key == "MaxSize":
             frame.setMaximumSize(value)
-        elif  key == "MinSize":
+        elif key == "MinSize":
             frame.setMinimumSize(value)
-        elif  key == "frameShape":
+        elif key == "frameShape":
             frame.setFrameShape(value)
-        elif  key == "frameShadow":
+        elif key == "frameShadow":
             frame.setFrameShadow(value)
-        elif  key == "name":
+        elif key == "name":
             frame.setObjectName(value)
+        elif key == "BackgroundColor":
+            frame.setStyleSheet(value)
     return frame
 
 def VecticalLayout(parent, **kwargs):
@@ -39,8 +41,8 @@ def horizontalLayout(parent, **kwargs):
             layout.setObjectName(value)
     return layout
 
-def Label(parent1, **kwargs):
-    label = QtWidgets.QLabel(parent=parent1)
+def Label(parent, **kwargs):
+    label = QtWidgets.QLabel(parent=parent)
     for key, value in kwargs.items():
         if  key == "Geometry":
             label.setGeometry(value)
@@ -74,43 +76,220 @@ def Font(**kwargs):
 
     return font
 
+def PushBtn(parent, **kwargs):
+    pushBtn = QtWidgets.QPushButton(parent=parent)
+    for key, value in kwargs.items():
+        if key == "Geometry":
+            pushBtn.setGeometry(value)
+        elif key == "MaxSize":
+            pushBtn.setMaximumSize(value)
+        elif key == "MinSize":
+            pushBtn.setMinimumSize(value)
+        elif key == "frameShape":
+            pushBtn.setFrameShape(value)
+        elif key == "frameShadow":
+            pushBtn.setFrameShadow(value)
+        elif key == "name":
+            pushBtn.setObjectName(value)
+        elif key == "BackgroundColor":
+            pushBtn.setStyleSheet(value)
+        elif key == "Text":
+            pushBtn.setText(value)
+        elif key == "Icon":
+            pushBtn.setIcon(value)
+        elif key == "IconSize":
+            pushBtn.setIconSize(value)
+    return pushBtn
 
+def Icon(*args, **kwargs):
+    icon = QtGui.QIcon()
+    for key, value in kwargs.items():
+        if key == "Pic":
+            icon.addPixmap(value, *args)
+
+    return icon
+
+class Ui_identifier(object):
+    def setupUi(self, Form):
+        #fonts
+        GEORGIA20 = Font(Family="Georgia",
+                         Point=20,
+                         )
+
+        #screen objects
+        self.identifier = Frame(Form,
+                                Geometry=QtCore.QRect(10, 10, 782, 64),
+                                MinSize=QtCore.QSize(0, 0),
+                                MaxSize=QtCore.QSize(16777215, 64),
+                                BackgroundColor="background-color: rgb(18, 18, 18);",
+                                frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                                frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                                name="identifier"
+                            )
+        self.identifierLayout = horizontalLayout(self.identifier,
+                                                 name="horizontalLayout_2"
+                                            )
+        self.YourLibrarylabel = Label(self.identifier,
+                                      MaxSize=QtCore.QSize(16777215, 64),
+                                      Font=GEORGIA20,
+                                      Color="color: rgb(241, 241, 241)",
+                                      name="YourLibrarylabel"
+                                )
+        searchIcon = Icon(QtGui.QIcon.Mode.Normal,
+                          QtGui.QIcon.State.Off,
+                          Pic=QtGui.QPixmap("images/Mediamodifier-Design.svg"),
+                    )
+        self.pushButtonSearchPlaylist = PushBtn(self.identifier,
+                                                MaxSize=QtCore.QSize(64, 64),
+                                                Font=GEORGIA20,
+                                                BackgroundColor="background-color: rgba(255, 255, 255, 0);",
+                                                Text="",
+                                                Icon=searchIcon,
+                                                IconSize=QtCore.QSize(64, 64),
+                                                name="pushButtonSearchPlaylist",
+                                            )
+        plusIcon = Icon(QtGui.QIcon.Mode.Normal,
+                        QtGui.QIcon.State.Off,
+                        Pic=QtGui.QPixmap("images/plus 3.svg"),
+                    )
+        self.pushButtonAddPlaylist = PushBtn(self.identifier,
+                                             MaxSize=QtCore.QSize(64, 64),
+                                             Font=GEORGIA20,
+                                             BackgroundColor="background-color: rgba(255, 255, 255, 0);",
+                                             Text="",
+                                             Icon=plusIcon,
+                                             IconSize=QtCore.QSize(32, 32),
+                                             name="pushButtonAddPlaylist",
+                                        )
+
+        #adding together
+        self.identifierLayout.addWidget(self.YourLibrarylabel)
+        self.identifierLayout.addWidget(self.pushButtonSearchPlaylist)
+        self.identifierLayout.addWidget(self.pushButtonAddPlaylist)
+
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+        return self.identifier
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        Form.setWindowTitle(_translate("Form", "Form"))
+        self.YourLibrarylabel.setText(_translate("Form", "Your Library"))
+
+class Ui_PlaylistHolder(object):
+    def setupUi(self, Form):
+        self.Playlists = Frame(Form,
+                               BackgroundColor="background-color: rgb(26, 26, 26);",
+                               frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                               frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                               name="Playlists")
+        self.PlaylistsLayout = VecticalLayout(self.Playlists,
+                                              name="PlaylistsLayout"
+                            )
+        
+        #creating playListWigit
+        self.PlaylistWidget = Ui_Playlist().setupUi(self.Playlists, "bagget","fish", "999")
+
+        #adding toghether
+        self.PlaylistsLayout.addWidget(self.PlaylistWidget)
+
+
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+        return self.Playlists
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        Form.setWindowTitle(_translate("Form", "Form"))
 
 class Ui_Playlist(object):
     def setupUi(self, Form, *argv):
-        self.playlistWidget = Frame(Form, Geometry=QtCore.QRect(0, 240, 762, 100), MaxSize=QtCore.QSize(16777215, 128), frameShape=QtWidgets.QFrame.Shape.StyledPanel, frameShadow=QtWidgets.QFrame.Shadow.Raised, name="playlistWidget",)
-        self.horizontalLayout_4 = horizontalLayout(self.playlistWidget, name="horizontalLayout_4")
-        self.framePic = Frame(self.playlistWidget, MaxSize=QtCore.QSize(80, 80), frameShape=QtWidgets.QFrame.Shape.StyledPanel, frameShadow=QtWidgets.QFrame.Shadow.Raised, name="framePic")
-        self.horizontalLayout_5 = horizontalLayout(self.framePic, name="horizontalLayout_5")
-        self.pic1 = Label(self.framePic, MaxSize=QtCore.QSize(64, 64), Text="", Pic=QtGui.QPixmap("images/deafult Playlist pic.png"), Scaling=True, name="pic1")
-        
-        self.horizontalLayout_5.addWidget(self.pic1)
-        self.horizontalLayout_4.addWidget(self.framePic)
+        #fonts
+        GEORGIA16 = Font(Family="Georgia", Point=16)
+        GEORGIA12 = Font(Family="Georgia", Point=12)
 
-        self.frame_4 = Frame(self.playlistWidget, MaxSize=QtCore.QSize(16777215, 80), frameShape=QtWidgets.QFrame.Shape.StyledPanel, frameShadow=QtWidgets.QFrame.Shadow.Raised, name="frame_4")
-        self.verticalLayout_5 = VecticalLayout(self.frame_4, name="verticalLayout_5")
-        Georgia16 = Font(Family="Georgia", Point=16)
-        self.label_4 = Label(self.frame_4, MinSize=QtCore.QSize(0, 0,), MaxSize=QtCore.QSize(16777215, 50), Font=Georgia16, Color="color: rgb(202, 202, 202);", name="label_4")
+        #screen objects
+        self.playlistWidget = Frame(Form,
+                                    Geometry=QtCore.QRect(0, 240, 762, 100),
+                                    MaxSize=QtCore.QSize(16777215, 128),
+                                    frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                                    frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                                    name="playlistWidget",
+                                )
+        self.playlistWidgetLayout = horizontalLayout(self.playlistWidget,
+                                                     name="playlistWidgetLayout"
+                                                )
+        self.framePic = Frame(self.playlistWidget,
+                              MaxSize=QtCore.QSize(80, 80),
+                              frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                              frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                              name="framePic",
+                            )
+        self.framePicLayout = horizontalLayout(self.framePic,
+                                                   name="framePicLayout",
+                                                )
+        self.playlistPic = Label(self.framePic,
+                                 MaxSize=QtCore.QSize(64, 64),
+                                 Text="",
+                                 Pic=QtGui.QPixmap("images/deafult Playlist pic.png"),
+                                 Scaling=True,
+                                 name="playlistPic",
+                            )
+        self.playlistDetails = Frame(self.playlistWidget,
+                                     MaxSize=QtCore.QSize(16777215, 80),
+                                     frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                                     frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                                     name="playlistDetails",
+                                )
+        self.playlistDetailsLayout = VecticalLayout(self.playlistDetails,
+                                                    name="playlistDetailsLayout",
+                                                )
+        self.playListName = Label(self.playlistDetails,
+                                  MinSize=QtCore.QSize(0, 0,),
+                                  MaxSize=QtCore.QSize(16777215, 50),
+                                  Font=GEORGIA16,
+                                  Color="color: rgb(202, 202, 202);",
+                                  name="playListName",
+                            )
+        self.artist = Label(self.playlistDetails,
+                            MaxSize=QtCore.QSize(16777215, 50),
+                            Font=GEORGIA12,
+                            Color="color: rgb(202, 202, 202);",
+                            name="artist",
+                        )
+        self.numOfSongs = Frame(self.playlistWidget,
+                                MinSize=QtCore.QSize(120, 0),
+                                MaxSize=QtCore.QSize(100, 80),
+                                frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                                frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                                name="numOfSongs",
+                            )
+        self.numOfSongsLayout = VecticalLayout(self.numOfSongs,
+                                               name="numOfSongsLayout",
+                                            )
+        self.songNum = Label(self.numOfSongs,
+                             MinSize=QtCore.QSize(0, 0),
+                             MaxSize=QtCore.QSize(200, 16777215),
+                             Font=GEORGIA12,
+                             Color="color: rgb(202, 202, 202);",
+                             name="songNum",
+                        )
+        self.emptySpace = Label(self.numOfSongs,
+                                Text="",
+                                name="emptySpace",
+                            )
 
-        self.verticalLayout_5.addWidget(self.label_4)
-
-        Georgia12 = Font(Family="Georgia", Point=12)
-        self.label_5 = Label(self.frame_4, MaxSize=QtCore.QSize(16777215, 50), Font=Georgia12, Color="color: rgb(202, 202, 202);", name="label_5")
-        
-        self.verticalLayout_5.addWidget(self.label_5)
-        self.horizontalLayout_4.addWidget(self.frame_4)
-
-        self.songNum1 = Frame(self.playlistWidget, MinSize=QtCore.QSize(120, 0), MaxSize=QtCore.QSize(100, 80), frameShape=QtWidgets.QFrame.Shape.StyledPanel, frameShadow=QtWidgets.QFrame.Shadow.Raised, name="songNum1")
-
-        self.verticalLayout_6 = VecticalLayout(self.songNum1, name="verticalLayout_6")
-        self.label_6 = Label(self.songNum1, MinSize=QtCore.QSize(0, 0), MaxSize=QtCore.QSize(200, 16777215), Font=Georgia12, Color="color: rgb(202, 202, 202);", name="label_6")
-
-        self.verticalLayout_6.addWidget(self.label_6)
-
-        self.label_3 = Label(self.songNum1, Text="", name="label_3")
-
-        self.verticalLayout_6.addWidget(self.label_3)
-        self.horizontalLayout_4.addWidget(self.songNum1)
+        #adding together
+        self.framePicLayout.addWidget(self.playlistPic)
+        self.playlistWidgetLayout.addWidget(self.framePic)
+        self.playlistDetailsLayout.addWidget(self.playListName)
+        self.playlistDetailsLayout.addWidget(self.artist)
+        self.playlistWidgetLayout.addWidget(self.playlistDetails)
+        self.numOfSongsLayout.addWidget(self.songNum)
+        self.numOfSongsLayout.addWidget(self.emptySpace)
+        self.playlistWidgetLayout.addWidget(self.numOfSongs)
 
         self.retranslateUi(Form,*argv)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -119,215 +298,119 @@ class Ui_Playlist(object):
 
     def retranslateUi(self, Form, *argv):
         _translate = QtCore.QCoreApplication.translate
-        self.label_4.setText(_translate("Form", argv[0]))
-        self.label_5.setText(_translate("Form", argv[1]))
-        self.label_6.setText(_translate("Form", f"{argv[2]} songs"))
+        self.playListName.setText(_translate("Form", argv[0]))
+        self.artist.setText(_translate("Form", argv[1]))
+        self.songNum.setText(_translate("Form", f"{argv[2]} songs"))
 
+class Ui_Footer(object):
 
+    def setupUi(self, Form):
+        #fonts
+        GEORGIA16 = Font(Family="Georgia", Point=16)
+        GEORGIA12 = Font(Family="Georgia", Point=12)
+        GEORGIA9 = Font(Family="Georgia", Point=9)
 
+        #screen objects
+        self.footer = Frame(Form,
+                            MinSize=QtCore.QSize(0, 0),
+                            MaxSize=QtCore.QSize(16777215, 90),
+                            frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                            frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                            name="footer",
+                        )
+        self.footerLayout = horizontalLayout(self.footer,
+                                                 name="footerLayout",
+                                            )
+        self.footerSearchFrame = Frame(self.footer,
+                                       MaxSize=QtCore.QSize(100, 100),
+                                       frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                                       frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                                       name="footerSearchFrame",
+                                    )
+        self.footerSearchFrameLayout = VecticalLayout(self.footerSearchFrame,
+                                                      name="footerSearchFrameLayout",
+                                                    )
+        searchIcon = Icon(QtGui.QIcon.Mode.Normal,
+                          QtGui.QIcon.State.Off,
+                          Pic=QtGui.QPixmap("images/Mediamodifier-Design.svg"),
+                        )
+        self.footerSearchBtn = PushBtn(self.footerSearchFrame,
+                                       MaxSize=QtCore.QSize(64, 64),
+                                       BackgroundColor="background-color: rgba(255, 255, 255, 0);",
+                                       Text="",
+                                       Icon=searchIcon,
+                                       IconSize=QtCore.QSize(64, 64),
+                                       name="footerSearchBtn",
+                                    )
+        self.searchLabel = Label(self.footerSearchFrame,
+                                 Font=GEORGIA9,
+                                 Color="color: rgb(241, 241, 241)",
+                                 name="searchLabel",
+                            )
+        self.footerLibraryFrame = Frame(self.footer,
+                                        MaxSize=QtCore.QSize(100, 100),
+                                        frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                                        frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                                        name="footerLibraryFrame",
+                                    )
+        self.footerLibraryFrameLayout = VecticalLayout(self.footerLibraryFrame,
+                                                       name="footerLibraryFrameLayout",
+                                                )
+        libraryIcon = Icon(QtGui.QIcon.Mode.Normal,
+                            QtGui.QIcon.State.Off,
+                            Pic=QtGui.QPixmap("images/whiote libraray.svg"),
+                        )
+        self.footerLibraryhBtn = PushBtn(self.footerLibraryFrame,
+                                         MaxSize=QtCore.QSize(64, 64),
+                                         BackgroundColor="background-color: rgba(255, 255, 255, 0);",
+                                         Text="",
+                                         Icon=libraryIcon,
+                                         IconSize=QtCore.QSize(64, 64),
+                                         name="footerLibraryhBtn",
+                                    )
+        self.libraryLabel = Label(self.footerLibraryFrame,
+                                  Font=GEORGIA9,
+                                  Color="color: rgb(241, 241, 241);",
+                                  name="libraryLabel",
+                            )
 
+        #adding together
+        self.footerSearchFrameLayout.addWidget(self.footerSearchBtn)
+        self.footerSearchFrameLayout.addWidget(self.searchLabel, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+        self.footerLayout.addWidget(self.footerSearchFrame, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+        self.footerLibraryFrameLayout.addWidget(self.footerLibraryhBtn)
+        self.footerLibraryFrameLayout.addWidget(self.libraryLabel)
+        self.footerLayout.addWidget(self.footerLibraryFrame, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
+
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+        return self.footer
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        Form.setWindowTitle(_translate("Form", "Form"))
+        self.searchLabel.setText(_translate("Form", "Search"))
+        self.libraryLabel.setText(_translate("Form", "Your Library"))
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.setWindowModality(QtCore.Qt.WindowModality.ApplicationModal)
         MainWindow.resize(800, 600)
         MainWindow.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.identifier = QtWidgets.QFrame(parent=self.centralwidget)
-        self.identifier.setMinimumSize(QtCore.QSize(0, 0))
-        self.identifier.setMaximumSize(QtCore.QSize(16777215, 64))
-        self.identifier.setStyleSheet("background-color: rgb(18, 18, 18);")
-        self.identifier.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.identifier.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.identifier.setObjectName("identifier")
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.identifier)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.YourLibrarylabel = QtWidgets.QLabel(parent=self.identifier)
-        self.YourLibrarylabel.setMaximumSize(QtCore.QSize(16777215, 64))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        font.setPointSize(20)
-        self.YourLibrarylabel.setFont(font)
-        self.YourLibrarylabel.setStyleSheet("color: rgb(241, 241, 241)")
-        self.YourLibrarylabel.setObjectName("YourLibrarylabel")
-        self.horizontalLayout_2.addWidget(self.YourLibrarylabel)
-        self.pushButtonSearchPlaylist = QtWidgets.QPushButton(parent=self.identifier)
-        self.pushButtonSearchPlaylist.setMaximumSize(QtCore.QSize(64, 64))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        self.pushButtonSearchPlaylist.setFont(font)
-        self.pushButtonSearchPlaylist.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.pushButtonSearchPlaylist.setText("")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/Mediamodifier-Design.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.pushButtonSearchPlaylist.setIcon(icon)
-        self.pushButtonSearchPlaylist.setIconSize(QtCore.QSize(64, 64))
-        self.pushButtonSearchPlaylist.setObjectName("pushButtonSearchPlaylist")
-        self.horizontalLayout_2.addWidget(self.pushButtonSearchPlaylist)
-        self.pushButtonAddPlaylist = QtWidgets.QPushButton(parent=self.identifier)
-        self.pushButtonAddPlaylist.setMaximumSize(QtCore.QSize(64, 64))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        self.pushButtonAddPlaylist.setFont(font)
-        self.pushButtonAddPlaylist.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.pushButtonAddPlaylist.setText("")
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("images/plus 3.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.pushButtonAddPlaylist.setIcon(icon1)
-        self.pushButtonAddPlaylist.setIconSize(QtCore.QSize(32, 32))
-        self.pushButtonAddPlaylist.setObjectName("pushButtonAddPlaylist")
-        self.horizontalLayout_2.addWidget(self.pushButtonAddPlaylist)
-        self.verticalLayout.addWidget(self.identifier)
-        self.Playlists = QtWidgets.QFrame(parent=self.centralwidget)
-        self.Playlists.setStyleSheet("background-color: rgb(26, 26, 26);")
-        self.Playlists.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.Playlists.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.Playlists.setObjectName("Playlists")
-        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.Playlists)
-        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.MainWindowLayout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.MainWindowLayout.setObjectName("MainWindowLayout")
+        self.identifier = Ui_identifier().setupUi(self.centralwidget)
+        self.Playlists = Ui_PlaylistHolder().setupUi(self.centralwidget)
+        self.footer = Ui_Footer().setupUi(self.Playlists)
 
+        #adding together
+        self.MainWindowLayout.addWidget(self.identifier)
+        self.MainWindowLayout.addWidget(self.Playlists)
+        self.MainWindowLayout.addWidget(self.footer)
 
-        self.PlaylistWidget2 = Ui_Playlist().setupUi(self.Playlists, "bagget","fish", "999")
-
-        self.PlaylistWidget = QtWidgets.QFrame(parent=self.Playlists)
-        self.PlaylistWidget.setMaximumSize(QtCore.QSize(16777215, 100))
-        self.PlaylistWidget.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.PlaylistWidget.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.PlaylistWidget.setObjectName("PlaylistWidget")
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.PlaylistWidget)
-        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.framePic = QtWidgets.QFrame(parent=self.PlaylistWidget)
-        self.framePic.setMaximumSize(QtCore.QSize(80, 80))
-        self.framePic.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.framePic.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.framePic.setObjectName("framePic")
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.framePic)
-        self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.pic1 = QtWidgets.QLabel(parent=self.framePic)
-        self.pic1.setMaximumSize(QtCore.QSize(64, 64))
-        self.pic1.setText("")
-        self.pic1.setPixmap(QtGui.QPixmap("images/deafult Playlist pic.png"))
-        self.pic1.setScaledContents(True)
-        self.pic1.setObjectName("pic1")
-        self.horizontalLayout_5.addWidget(self.pic1)
-        self.horizontalLayout_4.addWidget(self.framePic)
-        self.frame_4 = QtWidgets.QFrame(parent=self.PlaylistWidget)
-        self.frame_4.setMaximumSize(QtCore.QSize(16777215, 64))
-        self.frame_4.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_4.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_4.setObjectName("frame_4")
-        self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.frame_4)
-        self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.label_4 = QtWidgets.QLabel(parent=self.frame_4)
-        self.label_4.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_4.setMaximumSize(QtCore.QSize(16777215, 50))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        font.setPointSize(16)
-        self.label_4.setFont(font)
-        self.label_4.setStyleSheet("color: rgb(202, 202, 202);")
-        self.label_4.setObjectName("label_4")
-        self.verticalLayout_5.addWidget(self.label_4)
-        self.label_5 = QtWidgets.QLabel(parent=self.frame_4)
-        self.label_5.setMaximumSize(QtCore.QSize(16777215, 50))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        font.setPointSize(12)
-        self.label_5.setFont(font)
-        self.label_5.setStyleSheet("color: rgb(202, 202, 202);")
-        self.label_5.setObjectName("label_5")
-        self.verticalLayout_5.addWidget(self.label_5)
-        self.horizontalLayout_4.addWidget(self.frame_4)
-        self.songNum1 = QtWidgets.QFrame(parent=self.PlaylistWidget)
-        self.songNum1.setMinimumSize(QtCore.QSize(120, 0))
-        self.songNum1.setMaximumSize(QtCore.QSize(100, 64))
-        self.songNum1.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.songNum1.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.songNum1.setObjectName("songNum1")
-        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.songNum1)
-        self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.label_6 = QtWidgets.QLabel(parent=self.songNum1)
-        self.label_6.setMinimumSize(QtCore.QSize(0, 0))
-        self.label_6.setMaximumSize(QtCore.QSize(200, 16777215))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        font.setPointSize(12)
-        self.label_6.setFont(font)
-        self.label_6.setStyleSheet("color: rgb(202, 202, 202);")
-        self.label_6.setObjectName("label_6")
-        self.verticalLayout_6.addWidget(self.label_6)
-        self.label_3 = QtWidgets.QLabel(parent=self.songNum1)
-        self.label_3.setText("")
-        self.label_3.setObjectName("label_3")
-        self.verticalLayout_6.addWidget(self.label_3)
-        self.horizontalLayout_4.addWidget(self.songNum1)
-
-        self.verticalLayout_4.addWidget(self.PlaylistWidget)
-        self.verticalLayout_4.addWidget(self.PlaylistWidget2)
-
-
-        self.verticalLayout.addWidget(self.Playlists)
-        self.navbar = QtWidgets.QFrame(parent=self.centralwidget)
-        self.navbar.setMinimumSize(QtCore.QSize(0, 0))
-        self.navbar.setMaximumSize(QtCore.QSize(16777215, 90))
-        self.navbar.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.navbar.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.navbar.setObjectName("navbar")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.navbar)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.frame = QtWidgets.QFrame(parent=self.navbar)
-        self.frame.setMaximumSize(QtCore.QSize(100, 100))
-        self.frame.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame.setObjectName("frame")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.frame)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.pushButtonSearch = QtWidgets.QPushButton(parent=self.frame)
-        self.pushButtonSearch.setMaximumSize(QtCore.QSize(64, 64))
-        self.pushButtonSearch.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.pushButtonSearch.setText("")
-        self.pushButtonSearch.setIcon(icon)
-        self.pushButtonSearch.setIconSize(QtCore.QSize(64, 64))
-        self.pushButtonSearch.setObjectName("pushButtonSearch")
-        self.verticalLayout_2.addWidget(self.pushButtonSearch)
-        self.label = QtWidgets.QLabel(parent=self.frame)
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        self.label.setFont(font)
-        self.label.setStyleSheet("color: rgb(241, 241, 241)")
-        self.label.setObjectName("label")
-        self.verticalLayout_2.addWidget(self.label, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
-        self.horizontalLayout.addWidget(self.frame, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
-        self.frame_2 = QtWidgets.QFrame(parent=self.navbar)
-        self.frame_2.setMaximumSize(QtCore.QSize(100, 100))
-        self.frame_2.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
-        self.frame_2.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
-        self.frame_2.setObjectName("frame_2")
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.frame_2)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.pushButtonLibrary = QtWidgets.QPushButton(parent=self.frame_2)
-        self.pushButtonLibrary.setMaximumSize(QtCore.QSize(64, 64))
-        self.pushButtonLibrary.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.pushButtonLibrary.setText("")
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("images/whiote libraray.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.pushButtonLibrary.setIcon(icon2)
-        self.pushButtonLibrary.setIconSize(QtCore.QSize(64, 64))
-        self.pushButtonLibrary.setObjectName("pushButtonLibrary")
-        self.verticalLayout_3.addWidget(self.pushButtonLibrary)
-        self.label_2 = QtWidgets.QLabel(parent=self.frame_2)
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        self.label_2.setFont(font)
-        self.label_2.setStyleSheet("color: rgb(241, 241, 241);")
-        self.label_2.setObjectName("label_2")
-        self.verticalLayout_3.addWidget(self.label_2)
-        self.horizontalLayout.addWidget(self.frame_2, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
-        self.verticalLayout.addWidget(self.navbar)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -336,13 +419,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.YourLibrarylabel.setText(_translate("MainWindow", "Your Library"))
-        self.label_4.setText(_translate("MainWindow", "Playlist name"))
-        self.label_5.setText(_translate("MainWindow", "Artist"))
-        self.label_6.setText(_translate("MainWindow", "##### Songs"))
-        self.label.setText(_translate("MainWindow", "Search"))
-        self.label_2.setText(_translate("MainWindow", "Your Library"))
-
 
 if __name__ == "__main__":
     import sys
