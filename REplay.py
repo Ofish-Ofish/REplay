@@ -178,18 +178,15 @@ def PlaylistSaveSpotify(token):
   playlist = playlistRaw["name"]
   playlist = playlist.replace(" ", "_")
   path = "./playList/"
-
   isExsist = os.path.exists(path)
   if not isExsist:
     os.makedirs("playList")
   os.chdir(path)
   os.makedirs(playlist)
   os.chdir(playlist)
-
   img_data = get(playlistRaw["images"][0]["url"]).content
   with open(f'{playlist}.jpg', 'wb') as handler:
       handler.write(img_data)
-
   with open(f"{playlist}.csv",'w',newline='', encoding='utf-8') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerow(['songName','songid','Albumid','danceability','energy','key','loudness','mode','speechiness','acousticness','instrumentalness','liveness','valence','tempo','type','id','uri','track_href','analysis_url','duration_ms','time_signature','vector'])
