@@ -210,7 +210,7 @@ class Ui_PlaylistHolder(object):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-        return self.Playlists
+        return self.Playlists, self.PlaylistsLayout
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -420,10 +420,12 @@ class Ui_MainWindow(Ui_Footer, Ui_identifier):
         self.MainWindowLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.MainWindowLayout.setObjectName("MainWindowLayout")
         self.identifier = Ui_identifier().setupUi(self.centralwidget)
-        self.Playlists = Ui_PlaylistHolder().setupUi(self.centralwidget)
+        self.Playlists, self.PlaylistsLayout = Ui_PlaylistHolder().setupUi(self.centralwidget)
         self.footer, self.footerLayout = Ui_Footer().setupUi(self.Playlists)
 
-
+        print(self.PlaylistsLayout.itemAt(0).widget().objectName())
+        for i in range(self.PlaylistsLayout.count()):
+            self.PlaylistsLayout.itemAt(i).widget().mouseReleaseEvent=lambda event: self.SearchTab()
 
         self.footerLayout.itemAt(0).widget().layout().itemAt(0).widget().clicked.connect(self.SearchTab)
         self.footerLayout.itemAt(1).widget().layout().itemAt(0).widget().clicked.connect(self.LibraryTab)
@@ -445,7 +447,6 @@ class Ui_MainWindow(Ui_Footer, Ui_identifier):
     def SearchTab(self):
         self.identifier.hide()
         self.Playlists.hide()
-        self.footer.adjustSize()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
