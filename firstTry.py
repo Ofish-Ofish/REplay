@@ -387,6 +387,9 @@ class Ui_Footer(object):
                                   Color="color: rgb(241, 241, 241);",
                                   name="libraryLabel",
                             )
+        
+
+
 
         #adding together
         self.footerSearchFrameLayout.addWidget(self.footerSearchBtn)
@@ -399,7 +402,7 @@ class Ui_Footer(object):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-        return self.footer
+        return self.footer, self.footerLayout
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -407,7 +410,7 @@ class Ui_Footer(object):
         self.searchLabel.setText(_translate("Form", "Search"))
         self.libraryLabel.setText(_translate("Form", "Your Library"))
 
-class Ui_MainWindow(object):
+class Ui_MainWindow(Ui_Footer, Ui_identifier):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -418,7 +421,12 @@ class Ui_MainWindow(object):
         self.MainWindowLayout.setObjectName("MainWindowLayout")
         self.identifier = Ui_identifier().setupUi(self.centralwidget)
         self.Playlists = Ui_PlaylistHolder().setupUi(self.centralwidget)
-        self.footer = Ui_Footer().setupUi(self.Playlists)
+        self.footer, self.footerLayout = Ui_Footer().setupUi(self.Playlists)
+
+
+
+        self.footerLayout.itemAt(0).widget().layout().itemAt(0).widget().clicked.connect(self.SearchTab)
+        self.footerLayout.itemAt(1).widget().layout().itemAt(0).widget().clicked.connect(self.LibraryTab)
 
         #adding together
         self.MainWindowLayout.addWidget(self.identifier)
@@ -429,6 +437,15 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def LibraryTab(self):
+        self.identifier.show()
+        self.Playlists.show()
+
+    def SearchTab(self):
+        self.identifier.hide()
+        self.Playlists.hide()
+        self.footer.adjustSize()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
