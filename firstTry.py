@@ -27,6 +27,8 @@ def Frame(parent, **kwargs):
             frame.setObjectName(value)
         elif key == "BackgroundColor":
             frame.setStyleSheet(value)
+        elif key == "autoFillBackground":
+            frame.setAutoFillBackground(value)
     return frame
 
 def VecticalLayout(parent, **kwargs):
@@ -41,6 +43,8 @@ def horizontalLayout(parent, **kwargs):
     for key, value in kwargs.items():
         if key == "name":
             layout.setObjectName(value)
+        if key == "spacing":
+            layout.setSpacing(value)
     return layout
 
 def Label(parent, **kwargs):
@@ -172,7 +176,7 @@ class Ui_identifier(object):
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
-        return self.identifier
+        return self.identifier, self.identifierLayout
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -410,7 +414,95 @@ class Ui_Footer(object):
         self.searchLabel.setText(_translate("Form", "Search"))
         self.libraryLabel.setText(_translate("Form", "Your Library"))
 
-class Ui_MainWindow(Ui_Footer, Ui_identifier):
+class Ui_playlistImport(object):
+    def setupUi(self, Form):
+        GEORGIA20 = Font(Family="Georgia", Point=20)
+
+        self.playlistImport = Frame(Form,
+                                    BackgroundColor="background-color: rgb(0, 0, 0);",
+                                    frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                                    frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                                    name="playlistImport",
+                                    Geometry=QtCore.QRect(180, 180, 401, 201),
+                                )
+        self.importFrameLayout = VecticalLayout(self.playlistImport,
+                                            name="importFrameLayout",
+                                        )
+        self.newPlaylistFrame = Frame(self.playlistImport,
+                                      MinSize=QtCore.QSize(0, 0),
+                                      autoFillBackground=False,
+                                      BackgroundColor="background-color: rgb(26, 26, 26);",
+                                      frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                                      frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                                      name="newPlaylistFrame"
+                                    )
+        self.newPlaylistFrameLayout = horizontalLayout(self.newPlaylistFrame,
+                                                       spacing=16,
+                                                       name="newPlaylistFrameLayout",
+                                                    )
+        self.newPlaylistFrameIcon = Label(self.newPlaylistFrame,
+                                          MaxSize=QtCore.QSize(64, 64),
+                                          Text="",
+                                          Pic=QtGui.QPixmap("images/musicNote.svg"),
+                                          Scaling=True,
+                                          name="newPlaylistFrameIcon",
+                                        )
+        self.newPlaylistFrameTxt = Label(self.newPlaylistFrame,
+                                         MaxSize=QtCore.QSize(16777215, 16777215),
+                                         Font=GEORGIA20,
+                                         Color="color: rgb(202, 202, 202);",
+                                         name="newPlaylistFrameTxt",
+                                    )
+        self.importPlaylistFrame = Frame(self.playlistImport,
+                                         MinSize=QtCore.QSize(0, 0),
+                                         autoFillBackground=False,
+                                         BackgroundColor="background-color: rgb(26, 26, 26);",
+                                         frameShape=QtWidgets.QFrame.Shape.StyledPanel,
+                                         frameShadow=QtWidgets.QFrame.Shadow.Raised,
+                                         name="importPlaylistFrame"
+                                    )
+        self.importPlaylistFrameLayout = horizontalLayout(self.importPlaylistFrame,
+                                                       spacing=16,
+                                                       name="importPlaylistFrameLayout",
+                                                    )
+        self.importPlaylistFrameIcon = Label(self.importPlaylistFrame,
+                                          MaxSize=QtCore.QSize(64, 64),
+                                          Text="",
+                                          Pic=QtGui.QPixmap("images/import.svg"),
+                                          Scaling=True,
+                                          name="importPlaylistFrameIcon",
+                                        )
+        self.importPlaylistFrameTxt = Label(self.importPlaylistFrame,
+                                         MaxSize=QtCore.QSize(16777215, 16777215),
+                                         Font=GEORGIA20,
+                                         Color="color: rgb(202, 202, 202);",
+                                         name="importPlaylistFrameTxt",
+                                    )
+
+
+        self.newPlaylistFrameLayout.addWidget(self.newPlaylistFrameIcon)
+        self.newPlaylistFrameLayout.addWidget(self.newPlaylistFrameTxt)
+        self.importFrameLayout.addWidget(self.newPlaylistFrame)
+        self.importPlaylistFrameLayout.addWidget(self.importPlaylistFrameIcon)
+        self.importPlaylistFrameLayout.addWidget(self.importPlaylistFrameTxt)
+        self.importFrameLayout.addWidget(self.importPlaylistFrame)
+
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+        return self.playlistImport, self.importFrameLayout
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        Form.setWindowTitle(_translate("Form", "Form"))
+        self.newPlaylistFrameTxt.setText(_translate("Form", "Create a new playlist"))
+        self.importPlaylistFrameTxt.setText(_translate("Form", "Import a spotify playlist"))
+
+
+
+
+
+class Ui_MainWindow(Ui_Footer, Ui_identifier, Ui_playlistImport):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -418,12 +510,22 @@ class Ui_MainWindow(Ui_Footer, Ui_identifier):
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.MainWindowLayout = QtWidgets.QVBoxLayout(self.centralwidget)
-        self.MainWindowLayout.setObjectName("MainWindowLayout")
-        self.identifier = Ui_identifier().setupUi(self.centralwidget)
-        self.Playlists, self.PlaylistsLayout = Ui_PlaylistHolder().setupUi(self.centralwidget)
-        self.footer, self.footerLayout = Ui_Footer().setupUi(self.Playlists)
+        self.MainWindowLayout.setObjectName("MainWindowLayout")\
+        
 
-        print(self.PlaylistsLayout.itemAt(0).widget().objectName())
+        self.identifier, self.identifierLayout = Ui_identifier().setupUi(self.centralwidget)
+        self.playlistImport, self.importFrameLayout = Ui_playlistImport().setupUi(self.identifier)
+        self.playlistImport.hide()
+
+        self.Playlists, self.PlaylistsLayout = Ui_PlaylistHolder().setupUi(self.centralwidget)
+        self.footer, self.footerLayout = Ui_Footer().setupUi(self.centralwidget)
+
+
+        print(self.identifierLayout.itemAt(2).widget())
+        self.identifierLayout.itemAt(2).widget().clicked.connect(self.playlistImportfunc)
+
+
+
         for i in range(self.PlaylistsLayout.count()):
             self.PlaylistsLayout.itemAt(i).widget().mouseReleaseEvent=lambda event: self.SearchTab()
 
@@ -432,6 +534,7 @@ class Ui_MainWindow(Ui_Footer, Ui_identifier):
 
         #adding together
         self.MainWindowLayout.addWidget(self.identifier)
+        self.MainWindowLayout.addWidget(self.playlistImport)
         self.MainWindowLayout.addWidget(self.Playlists)
         self.MainWindowLayout.addWidget(self.footer)
 
@@ -447,6 +550,12 @@ class Ui_MainWindow(Ui_Footer, Ui_identifier):
     def SearchTab(self):
         self.identifier.hide()
         self.Playlists.hide()
+
+    def playlistImportfunc(self):
+        self.identifier.hide()
+        self.Playlists.hide()
+        self.footer.hide()
+        self.playlistImport.show()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
